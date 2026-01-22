@@ -1,0 +1,77 @@
+.store-section {
+  margin: 24px 0;
+  padding-left: 16px; /* Left padding for the title */
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.store-swiper {
+  padding-right: 16px; /* Right padding for the last slide */
+}
+
+.store-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.store-image-placeholder {
+  width: 100%;
+  aspect-ratio: 16 / 9; /* Standard video/image ratio */
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.store-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.store-name {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+  color: #111;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.store-meta {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: #555;
+}
+
+.star-icon {
+  color: #FFC107; /* Amber for star */
+  margin-right: 2px;
+}
+
+.rating {
+  font-weight: 600;
+  color: #333;
+}
+
+.dot {
+  margin: 0 4px;
+  color: #ccc;
+}
+
+.delivery-fee {
+  font-size: 12px;
+  color: #888;
+}

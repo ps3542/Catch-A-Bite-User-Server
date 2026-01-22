@@ -1,0 +1,93 @@
+.header-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  padding: 0 16px;
+  background-color: white;
+  border-bottom: 1px solid #e0e0e0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* --- Left Section --- */
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+/* When in search mode, let the left side expand to fill space */
+.header-left.search-mode {
+  flex: 1;
+  margin-right: 12px; /* Add spacing between input and icons */
+}
+
+/* Brand Style */
+.brand-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #2f6f62;
+}
+
+/* Back Button Style */
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* Search Input Style */
+.header-search-input {
+  width: 100%;
+  height: 36px;
+  background-color: #f3f4f6; /* Light gray background */
+  border: none;
+  border-radius: 18px;       /* Rounded pill shape */
+  padding: 0 16px;
+  font-size: 14px;
+  color: #333;
+  outline: none;
+}
+
+.header-search-input:focus {
+  background-color: #fff;
+  box-shadow: 0 0 0 2px #2f6f62; /* Focus ring color */
+}
+
+/* --- Right Section --- */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nav-icon-link,
+.nav-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: none; /* Removes underline */
+}
+
+/* FIX: Prevent purple visited links */
+.nav-icon-link:visited {
+  color: #333;
+}
+
+.nav-icon-link:hover,
+.nav-icon-btn:hover {
+  color: #2f6f62;
+}

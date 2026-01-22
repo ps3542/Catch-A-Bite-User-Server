@@ -1,0 +1,121 @@
+/* src/components/appuser/StoreCarousel.css */
+
+.store-section {
+  margin: 24px 0;
+  padding-left: 16px;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.store-swiper {
+  padding-right: 16px;
+}
+
+/* --- CARD CONTAINER CHANGES --- */
+.store-card {
+  position: relative; /* Key: Allows absolute positioning of children */
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  
+  /* Move border-radius here to clip both image and overlay */
+  border-radius: 12px;
+  overflow: hidden; 
+  
+  /* Force the card to maintain aspect ratio (Image size) */
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+/* --- IMAGE CHANGES --- */
+.store-image-placeholder {
+  width: 100%;
+  height: 100%; /* Fill the entire card */
+  /* border-radius removed here because parent handles it */
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.5); /* Faint text for the placeholder letter */
+  font-size: 40px;
+  font-weight: bold;
+}
+
+/* --- INFO OVERLAY CHANGES --- */
+.store-info {
+  position: absolute; /* Take it out of flow */
+  bottom: 0;          /* Stick to bottom */
+  left: 0;
+  width: 100%;
+  
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  
+  /* Add padding and a dark gradient background for readability */
+  padding: 12px;
+  padding-top: 40px; /* Space for gradient fade */
+  
+  /* Ensure it sits on top */
+  z-index: 2;
+}
+
+/* --- TEXT COLOR UPDATES (Must be light now) --- */
+
+.store-name {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  
+  /* Change to White */
+  color: #fff; 
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5); /* Optional shadow for contrast */
+  
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.store-meta {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  
+  /* Change to Light Gray */
+  color: #e0e0e0; 
+}
+
+.star-icon {
+  color: #FFC107;
+  margin-right: 2px;
+}
+
+.rating {
+  font-weight: 600;
+  color: #fff; /* White rating */
+}
+
+.dot {
+  margin: 0 4px;
+  color: #bbb;
+}
+
+.delivery-fee {
+  font-size: 12px;
+  color: #ccc; /* Light gray delivery fee */
+}
+
+/* Helper for Status Text */
+.status-open {
+  color: #69F0AE; /* Bright Green */
+  font-weight: 600;
+}
+.status-close {
+  color: #FF5252; /* Bright Red */
+  font-weight: 600;
+}
