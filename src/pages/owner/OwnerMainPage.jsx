@@ -1,52 +1,64 @@
+import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../../components/DashboardLayout.jsx";
 import useRoleGuard from "../../hooks/useRoleGuard.js";
+import { loadActiveStoreId } from "../../components/owner/OwnerStoreContextBar.jsx";
 
-const fallbackUser = {
-  name: "샘플 사장님",
-};
-
-const quickActions = [
-  { label: "가게 관리", hint: "매장 정보 및 영업시간" },
-  { label: "메뉴 등록", hint: "신규 메뉴 빠르게 추가" },
-  { label: "주문 확인", hint: "대기 주문 현황 보기" },
-];
-
-const summaryCards = [
-  { title: "오늘 주문", value: "23건", meta: "피크타임 12:00~13:00" },
-  { title: "오늘 매출", value: "328,000원", meta: "전일 대비 +12%" },
-];
-
-const activities = [
-  { title: "주문 #2314 접수 완료", time: "10분 전", status: "접수" },
-  { title: "배달 픽업 요청", time: "30분 전", status: "대기" },
-  { title: "리뷰 답글 작성", time: "오늘 09:20", status: "응답" },
-  { title: "영업 상태 변경", time: "어제 22:10", status: "완료" },
-  { title: "메뉴 품절 처리", time: "2일 전", status: "완료" },
-];
-
-const notices = [
-  { title: "가게 운영 팁", detail: "이번 주 인기 메뉴 트렌드를 확인해보세요." },
-  { title: "정산 안내", detail: "월말 정산 일정은 마이페이지에서 확인됩니다." },
-];
+const fallbackUser = { name: "Owner" };
 
 export default function OwnerMainPage() {
+  const navigate = useNavigate();
   const { user, loading } = useRoleGuard("OWNER", fallbackUser);
+
   const dateText = new Date().toLocaleDateString("ko-KR", {
     month: "long",
     day: "numeric",
     weekday: "short",
   });
 
+  const storeId = loadActiveStoreId();
+
+  const quickActions = [
+    { label: "리뷰 관리", hint: "답글/문의 처리", to: "/owner/reviews" },
+    { label: "결제 내역", hint: "기간별 결제 조회", to: "/owner/payments" },
+    { label: "정산 내역", hint: "정산 진행 상황 확인", to: "/owner/transactions" },
+    { label: "매장 관리", hint: "매장 정보/상태 관리", to: "/owner/stores" },
+  ];
+
+  const summaryCards = [
+    {
+      title: "현재 매장",
+      value: storeId ? String(storeId) : "미설정",
+      meta: "상단에서 storeId를 적용하세요",
+    },
+    { title: "운영 상태", value: "-", meta: "매장 상태 API 연동 예정" },
+  ];
+
+  const activities = [{ title: "대시보드 진입", time: "방금", status: "OK" }];
+
+  const notices = [
+    {
+      title: "연동 안내",
+      detail:
+        "리뷰/결제/정산은 storeId가 필요합니다. 상단에서 storeId를 적용하세요.",
+    },
+  ];
+
+  const handleAction = (action) => {
+    // action.to가 있으면 그 경로로 이동
+    if (action?.to) navigate(action.to);
+  };
+
   return (
     <DashboardLayout
-      roleLabel="사장님"
-      userName={user.name}
+      roleLabel="Owner"
+      userName={user?.name ?? fallbackUser.name}
       dateText={dateText}
       quickActions={quickActions}
       summaryCards={summaryCards}
       activities={activities}
       notices={notices}
       isLoading={loading}
+      onAction={handleAction}
     />
   );
 }

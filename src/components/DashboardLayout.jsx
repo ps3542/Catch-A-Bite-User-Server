@@ -10,6 +10,9 @@ export default function DashboardLayout({
   activities,
   notices,
   isLoading,
+
+  // ✅ 추가: 액션 클릭 핸들러(없어도 기존처럼 동작)
+  onAction,
 }) {
   const displayName = userName || "게스트";
 
@@ -20,7 +23,8 @@ export default function DashboardLayout({
           <div>
             <div className={styles.roleTag}>{roleLabel}</div>
             <div className={styles.greeting}>
-              안녕하세요, <span className={styles.greetingName}>{displayName}</span>님
+              안녕하세요,{" "}
+              <span className={styles.greetingName}>{displayName}</span>님
             </div>
             <div className={styles.subText}>
               오늘도 안정적인 운영을 위해 준비했습니다.
@@ -67,6 +71,7 @@ export default function DashboardLayout({
                   type="button"
                   key={action.label}
                   className={styles.actionButton}
+                  onClick={() => onAction?.(action)}
                 >
                   {action.label}
                   <span className={styles.actionHint}>{action.hint}</span>

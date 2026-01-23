@@ -1,0 +1,95 @@
+:global(:root) {
+  --owner-surface: #ffffff;
+  --owner-border: #e3e5e1;
+  --owner-muted: #6d756f;
+  --owner-text: #1c231f;
+  --owner-accent: #2f6f62;
+}
+
+.storeContextBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--owner-border);
+  border-radius: 12px;
+  background: var(--owner-surface);
+  margin-bottom: 16px;
+}
+
+.storeContextTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--owner-text);
+}
+
+.storeContextControls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.storeIdInput {
+  width: 120px;
+  padding: 10px 10px;
+  border: 1px solid var(--owner-border);
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+.primaryButton {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--owner-border);
+  background: var(--owner-accent);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primaryButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.storeContextHint {
+  font-size: 12px;
+  color: var(--owner-muted);
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--owner-border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--owner-surface);
+}
+
+.th, .td {
+  padding: 12px 12px;
+  border-bottom: 1px solid var(--owner-border);
+  font-size: 13px;
+  color: var(--owner-text);
+  text-align: left;
+}
+
+.th {
+  background: #fafafa;
+  font-weight: 800;
+}
+
+.toolbar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 12px 0;
+}
+
+.input {
+  padding: 10px 10px;
+  border: 1px solid var(--owner-border);
+  border-radius: 10px;
+  font-size: 13px;
+}
