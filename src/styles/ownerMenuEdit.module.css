@@ -1,0 +1,17 @@
+.wrap{display:flex;flex-direction:column;gap:14px;}
+.head{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.title{font-size:18px;font-weight:800;margin:0;}
+.actions{display:flex;gap:8px;}
+.form{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:14px;}
+.field{display:flex;flex-direction:column;gap:8px;}
+.label{font-size:12px;color:#6b7280;}
+.input,.select,.textarea{width:100%;border:1px solid #e5e7eb;border-radius:10px;padding:10px 12px;font-size:14px;outline:none;background:#fff;}
+.textarea{resize:vertical;min-height:110px;}
+.fieldInline{display:flex;flex-direction:column;gap:8px;}
+.toggle{display:flex;gap:8px;}
+.toggleBtn{flex:1;border-radius:10px;padding:10px 12px;border:1px solid #e5e7eb;background:#fff;font-size:13px;cursor:pointer;}
+.toggleOn{background:#111;color:#fff;border-color:#111;}
+.primaryBtn,.primaryBtnWide{border:none;border-radius:10px;background:#111;color:#fff;font-size:14px;padding:10px 14px;cursor:pointer;}
+.primaryBtnWide{width:100%;padding:12px 14px;}
+.ghostBtn{border-radius:10px;border:1px solid #e5e7eb;background:#fff;font-size:14px;padding:10px 14px;cursor:pointer;}
+.bottom{margin-top:4px;}

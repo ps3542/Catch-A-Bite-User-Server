@@ -1,20 +1,59 @@
 import { useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
 import InlineMessage from "../../../components/InlineMessage.jsx";
-import OwnerStoreContextBar, { loadActiveStoreId } from "../../../components/owner/OwnerStoreContextBar.jsx";
+import { loadActiveStoreId } from "../../../components/owner/OwnerStoreContextBar.jsx";
 import { ownerReviewService } from "../../../api/owner/ownerReviewService.js";
-import styles from "../../../styles/owner.module.css";
+import styles from "../../../styles/ownerReview.module.css";
+
+function safeArray(v) {
+  return Array.isArray(v) ? v : [];
+}
+
+// ApiResponse.ok({ data }) 형태 대응
+function extractPage(res) {
+  const body = res?.data ?? null;
+  const data = body?.data ?? body ?? null;
+
+  // PageResponseDTO<OwnerReviewDTO> 예상: { content, page, size, totalElements, totalPages }
+  const content = safeArray(data?.content ?? data?.items ?? data);
+  const page = Number.isFinite(Number(data?.page)) ? Number(data.page) : 0;
+  const size = Number.isFinite(Number(data?.size)) ? Number(data.size) : 20;
+  const totalElements = Number.isFinite(Number(data?.totalElements)) ? Number(data.totalElements) : content.length;
+  const totalPages = Number.isFinite(Number(data?.totalPages))
+    ? Number(data.totalPages)
+    : Math.max(1, Math.ceil(totalElements / Math.max(1, size)));
+
+  return { content, page, size, totalElements, totalPages };
+}
+
+function stars(rating) {
+  const n = Math.max(0, Math.min(5, Number(rating ?? 0)));
+  const full = "★".repeat(n);
+  const empty = "☆".repeat(5 - n);
+  return `${full}${empty}`;
+}
 
 export default function OwnerReviewPage() {
-  const [storeId, setStoreId] = useState(loadActiveStoreId());
-  const [items, setItems] = useState([]);
+  const params = useParams();
+  const paramStoreId = params?.storeId;
+  const [storeId, setStoreId] = useState(paramStoreId ?? loadActiveStoreId());
+  const canLoad = useMemo(() => Number.isFinite(Number(storeId)) && Number(storeId) > 0, [storeId]);
+
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(null);
 
-  const [replyDraft, setReplyDraft] = useState({ reviewId: "", content: "" });
+  const [pageState, setPageState] = useState({
+    content: [],
+    page: 0,
+    size: 10,
+    totalElements: 0,
+    totalPages: 1,
+  });
 
-  const canLoad = useMemo(() => Number.isFinite(Number(storeId)) && Number(storeId) > 0, [storeId]);
+  // reviewId -> draft text
+  const [drafts, setDrafts] = useState({});
 
-  const load = async () => {
+  const load = async (nextPage = pageState.page) => {
     if (!canLoad) {
       setStatus({ tone: "error", message: "storeId를 먼저 적용해 주세요." });
       return;
@@ -22,106 +61,159 @@ export default function OwnerReviewPage() {
     setLoading(true);
     setStatus(null);
     try {
-      const res = await ownerReviewService.list(Number(storeId));
-      setItems(res.data?.data ?? res.data ?? []);
+      const res = await ownerReviewService.list(Number(storeId), { page: nextPage, size: pageState.size });
+      const p = extractPage(res);
+      setPageState(p);
     } catch (e) {
-      setStatus({ tone: "error", message: e?.message || "리뷰 조회에 실패했습니다." });
+      setStatus({ tone: "error", message: e?.response?.data?.message || e?.message || "리뷰 조회에 실패했습니다." });
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    // storeId가 설정돼 있으면 바로 로드
-    if (canLoad) load();
+    if (canLoad) load(0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storeId]);
 
-  const submitReply = async () => {
-    const rid = Number(replyDraft.reviewId);
-    if (!canLoad) {
-      setStatus({ tone: "error", message: "storeId를 먼저 적용해 주세요." });
+  useEffect(() => {
+    const onStoreChange = () => {
+      if (paramStoreId) return;
+      setStoreId(loadActiveStoreId());
+    };
+    window.addEventListener("owner:store-change", onStoreChange);
+    window.addEventListener("storage", onStoreChange);
+    return () => {
+      window.removeEventListener("owner:store-change", onStoreChange);
+      window.removeEventListener("storage", onStoreChange);
+    };
+  }, []);
+
+  const submitReply = async (reviewId) => {
+    const content = String(drafts[reviewId] ?? "").trim();
+    if (!content) {
+      setStatus({ tone: "error", message: "답글 내용을 입력해 주세요." });
       return;
     }
-    if (!Number.isFinite(rid) || rid <= 0 || !replyDraft.content.trim()) {
-      setStatus({ tone: "error", message: "reviewId와 답글 내용을 입력해 주세요." });
+    if (!canLoad) {
+      setStatus({ tone: "error", message: "storeId를 먼저 적용해 주세요." });
       return;
     }
 
     setLoading(true);
     setStatus(null);
     try {
-      await ownerReviewService.reply(Number(storeId), rid, { content: replyDraft.content.trim() });
-      setReplyDraft({ reviewId: "", content: "" });
+      await ownerReviewService.reply(Number(storeId), Number(reviewId), { content });
+      setDrafts((prev) => ({ ...prev, [reviewId]: "" }));
       setStatus({ tone: "success", message: "답글이 등록되었습니다." });
-      await load();
+      await load(pageState.page);
     } catch (e) {
-      setStatus({ tone: "error", message: e?.message || "답글 등록에 실패했습니다." });
+      setStatus({ tone: "error", message: e?.response?.data?.message || e?.message || "답글 등록에 실패했습니다." });
     } finally {
       setLoading(false);
     }
   };
 
+  const content = pageState.content;
+
   return (
-    <div>
-      <OwnerStoreContextBar onChange={(id) => setStoreId(id)} />
-
-      <h2>리뷰 관리</h2>
-
-      <div className={styles.toolbar}>
-        <input
-          className={styles.input}
-          type="number"
-          min="1"
-          placeholder="reply할 reviewId"
-          value={replyDraft.reviewId}
-          onChange={(e) => setReplyDraft((p) => ({ ...p, reviewId: e.target.value }))}
-        />
-        <input
-          className={styles.input}
-          placeholder="답글 내용"
-          value={replyDraft.content}
-          onChange={(e) => setReplyDraft((p) => ({ ...p, content: e.target.value }))}
-        />
-        <button type="button" className={styles.primaryButton} onClick={submitReply} disabled={loading}>
-          답글 등록
-        </button>
-        <button type="button" className={styles.primaryButton} onClick={load} disabled={loading}>
-          새로고침
-        </button>
+    <div className={styles.page}>
+      <div className={styles.headerRow}>
+        <h2 className={styles.title}>리뷰 관리</h2>
+        <div className={styles.headerActions}>
+          <button type="button" className={styles.outlineBtn} onClick={() => load(pageState.page)} disabled={loading}>
+            새로고침
+          </button>
+        </div>
       </div>
 
       <InlineMessage tone={status?.tone}>{status?.message}</InlineMessage>
-      {loading ? <div>불러오는 중...</div> : null}
+      {loading ? <div className={styles.muted}>불러오는 중...</div> : null}
 
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th className={styles.th}>id</th>
-            <th className={styles.th}>내용</th>
-            <th className={styles.th}>작성자</th>
-            <th className={styles.th}>별점</th>
-            <th className={styles.th}>답글</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items?.length ? (
-            items.map((r, idx) => (
-              <tr key={r.reviewId ?? r.id ?? idx}>
-                <td className={styles.td}>{r.reviewId ?? r.id ?? "-"}</td>
-                <td className={styles.td}>{r.content ?? r.reviewContent ?? "-"}</td>
-                <td className={styles.td}>{r.writerNickname ?? r.nickname ?? "-"}</td>
-                <td className={styles.td}>{r.rating ?? r.reviewRating ?? "-"}</td>
-                <td className={styles.td}>{r.replyContent ?? r.reply ?? "-"}</td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td className={styles.td} colSpan={5}>리뷰가 없습니다.</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+      <div className={styles.pagerRow}>
+        <div className={styles.pagerInfo}>
+          총 <b>{pageState.totalElements}</b>건 · {pageState.page + 1}/{pageState.totalPages} 페이지
+        </div>
+
+        <div className={styles.pagerBtns}>
+          <button
+            type="button"
+            className={styles.outlineBtn}
+            onClick={() => load(Math.max(0, pageState.page - 1))}
+            disabled={loading || pageState.page <= 0}
+          >
+            이전
+          </button>
+          <button
+            type="button"
+            className={styles.outlineBtn}
+            onClick={() => load(Math.min(pageState.totalPages - 1, pageState.page + 1))}
+            disabled={loading || pageState.page >= pageState.totalPages - 1}
+          >
+            다음
+          </button>
+        </div>
+      </div>
+
+      <div className={styles.list}>
+        {!loading && content.length === 0 ? (
+          <div className={styles.muted}>리뷰가 없습니다.</div>
+        ) : (
+          content.map((r, idx) => {
+            const reviewId = r.reviewId ?? r.id ?? idx;
+            const writer = r.writerNickname ?? r.nickname ?? r.memberNickname ?? "-";
+            const rating = r.rating ?? r.reviewRating ?? 0;
+            const createdAt = r.reviewCreatedAt ?? r.createdAt ?? r.regDate ?? "";
+            const text = r.content ?? r.reviewContent ?? "-";
+            const reply = r.replyContent ?? r.reply ?? r.reviewReplyContent ?? "";
+
+            const hasReply = Boolean(String(reply ?? "").trim());
+
+            return (
+              <div key={reviewId} className={styles.card}>
+                <div className={styles.cardTop}>
+                  <div className={styles.metaLeft}>
+                    <div className={styles.writer}>{writer}</div>
+                    <div className={styles.subMeta}>
+                      <span className={styles.stars}>{stars(rating)}</span>
+                      {createdAt ? <span className={styles.dot}>·</span> : null}
+                      {createdAt ? <span className={styles.date}>{String(createdAt).slice(0, 16)}</span> : null}
+                    </div>
+                  </div>
+                  <div className={styles.badge}>id {reviewId}</div>
+                </div>
+
+                <div className={styles.content}>{text}</div>
+
+                <div className={styles.replyBlock}>
+                  <div className={styles.replyTitle}>사장님 답글</div>
+
+                  {hasReply ? (
+                    <div className={styles.replyReadOnly}>{reply}</div>
+                  ) : (
+                    <div className={styles.replyEditor}>
+                      <textarea
+                        className={styles.textarea}
+                        placeholder="답글을 입력해 주세요"
+                        value={drafts[reviewId] ?? ""}
+                        onChange={(e) => setDrafts((p) => ({ ...p, [reviewId]: e.target.value }))}
+                      />
+                      <button
+                        type="button"
+                        className={styles.primaryBtn}
+                        onClick={() => submitReply(reviewId)}
+                        disabled={loading}
+                      >
+                        답글 등록
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
     </div>
   );
 }

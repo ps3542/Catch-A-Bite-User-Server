@@ -99,7 +99,7 @@ export default function UserMainPage() {
       
       {/* 1. 상단 배너 영역 */}
       <section style={{ marginBottom: '24px' }}>
-         <StoreCarousel title="오늘의 추천 맛집 🎲" stores={randomStores} pages={1} />
+         <StoreCarousel title="오늘의 추천 맛집 " stores={randomStores} pages={1} />
       </section>
 
       {/* 2. 카테고리 아이콘 영역 (Swiper) */}

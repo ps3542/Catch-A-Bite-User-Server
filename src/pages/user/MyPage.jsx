@@ -66,10 +66,10 @@ export default function MyPage() {
           <span className={styles.topBarTitle}>마이페이지</span>
           <div className={styles.rightIcons}>
             <button className={styles.iconButton} type="button" aria-label="알림">
-              🔔
+              
             </button>
             <button className={styles.iconButton} type="button" aria-label="검색">
-              🔍
+              
             </button>
           </div>
         </header>
@@ -116,7 +116,7 @@ export default function MyPage() {
 
       <nav className={styles.bottomNav}>
         <Link to="/user/main" className={styles.navItem}>
-          <span className={styles.navIcon}>🏠</span>
+          <span className={styles.navIcon}></span>
           홈
         </Link>
         <button
@@ -124,7 +124,7 @@ export default function MyPage() {
           className={styles.navItem}
           onClick={() => alert("준비중입니다")}
         >
-          <span className={styles.navIcon}>🔍</span>
+          <span className={styles.navIcon}></span>
           검색
         </button>
         <button
@@ -140,11 +140,11 @@ export default function MyPage() {
           className={styles.navItem}
           onClick={() => alert("준비중입니다")}
         >
-          <span className={styles.navIcon}>🧾</span>
+          <span className={styles.navIcon}></span>
           주문내역
         </button>
         <Link to="/user/mypage" className={styles.navItem}>
-          <span className={styles.navIcon}>👤</span>
+          <span className={styles.navIcon}></span>
           마이
         </Link>
       </nav>

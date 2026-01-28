@@ -1,11 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
 import InlineMessage from "../../../components/InlineMessage.jsx";
-import OwnerStoreContextBar, { loadActiveStoreId } from "../../../components/owner/OwnerStoreContextBar.jsx";
+import { loadActiveStoreId } from "../../../components/owner/OwnerStoreContextBar.jsx";
 import { ownerTransactionService } from "../../../api/owner/ownerTransactionService.js";
 import styles from "../../../styles/owner.module.css";
 
 export default function OwnerTransactionPage() {
-  const [storeId, setStoreId] = useState(loadActiveStoreId());
+  const params = useParams();
+  const paramStoreId = params?.storeId;
+  const [storeId, setStoreId] = useState(paramStoreId ?? loadActiveStoreId());
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [page, setPage] = useState(0);
@@ -40,11 +43,23 @@ export default function OwnerTransactionPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storeId, page, size]);
 
+  useEffect(() => {
+    const onStoreChange = () => {
+      if (paramStoreId) return;
+      setStoreId(loadActiveStoreId());
+    };
+    window.addEventListener("owner:store-change", onStoreChange);
+    window.addEventListener("storage", onStoreChange);
+    return () => {
+      window.removeEventListener("owner:store-change", onStoreChange);
+      window.removeEventListener("storage", onStoreChange);
+    };
+  }, []);
+
   const rows = data?.content ?? data ?? [];
 
   return (
     <div>
-      <OwnerStoreContextBar onChange={(id) => setStoreId(id)} />
       <h2>정산 내역</h2>
 
       <div className={styles.toolbar}>

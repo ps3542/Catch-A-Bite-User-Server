@@ -1,0 +1,357 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* 공통 */
+.error {
+  color: #dc2626;
+  font-weight: 900;
+}
+.muted {
+  color: #6b7280;
+  font-weight: 700;
+}
+
+/* 상단 */
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 900;
+}
+
+/* 탭 */
+.tabs {
+  display: inline-flex;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  overflow: hidden;
+  width: fit-content;
+  background: #fff;
+}
+.tab {
+  border: 0;
+  background: #fff;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-weight: 900;
+}
+.tabActive {
+  background: #111;
+  color: #fff;
+}
+
+/* 목록 */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.orderCard {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background: #fff;
+  padding: 18px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+}
+
+.orderLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.orderNo {
+  font-size: 18px;
+  font-weight: 900;
+  color: #111;
+}
+
+.orderSummary {
+  font-size: 14px;
+  font-weight: 800;
+  color: #111;
+}
+
+.orderPrice {
+  font-size: 14px;
+  font-weight: 900;
+  color: #111;
+}
+
+.orderAddr {
+  font-size: 13px;
+  font-weight: 700;
+  color: #6b7280;
+}
+
+.orderRight {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.outlineArrowBtn {
+  border: 1px solid #9ca3af;
+  border-radius: 10px;
+  padding: 10px 14px;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 900;
+  color: #111;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.chev {
+  font-weight: 900;
+}
+
+/* 상세 헤더 */
+.detailHeader {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  gap: 10px;
+}
+.backBtn {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 900;
+  font-size: 18px;
+}
+.detailTitle {
+  font-size: 22px;
+  font-weight: 900;
+  text-align: center;
+}
+.detailHeaderSpacer {
+  width: 44px;
+  height: 44px;
+}
+
+/* 진행 카드 */
+.progressCard {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background: #fff;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.progressTitle {
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.progressBar {
+  position: relative;
+  padding: 12px 0 6px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.progressLine {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: 18px;
+  height: 2px;
+  background: #e5e7eb;
+  z-index: 0;
+}
+.progressStep {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  z-index: 1;
+}
+
+.dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: #d1d5db;
+}
+.dotDone {
+  background: #9ca3af;
+}
+.dotActive {
+  background: #111;
+}
+
+.stepLabel {
+  font-size: 12px;
+  font-weight: 800;
+  color: #9ca3af;
+}
+.stepLabelActive {
+  color: #111;
+}
+
+/* 주문이력 */
+.historyTitle {
+  font-size: 16px;
+  font-weight: 900;
+  margin-top: 6px;
+}
+
+.historyCard {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background: #fff;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.historyHeader {
+  font-size: 18px;
+  font-weight: 900;
+  color: #111;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.historyGrid {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  row-gap: 10px;
+  column-gap: 10px;
+  font-size: 13px;
+}
+.historyKey {
+  color: #6b7280;
+  font-weight: 800;
+}
+.historyVal {
+  color: #111;
+  font-weight: 900;
+}
+
+/* 버튼 */
+.bigBlackBtn {
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: #111;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 900;
+}
+.bigOutlineBtn {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 900;
+}
+.bigDangerBtn {
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: #dc2626;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 900;
+}
+.detailActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.disabledBtn {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* 모달(조리시간 선택) */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  z-index: 9999;
+}
+
+.modal {
+  width: min(520px, 92vw);
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modalTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.modalTitle {
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.modalClose {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.timePicker {
+  display: grid;
+  grid-template-columns: 56px 1fr 56px;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 8px;
+}
+
+.timeBtn {
+  height: 56px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  cursor: pointer;
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.timeValue {
+  text-align: center;
+  font-size: 34px;
+  font-weight: 900;
+}

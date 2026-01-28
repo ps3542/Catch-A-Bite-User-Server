@@ -17,7 +17,7 @@ export const paymentService = {
             return;
         }
 
-        console.log(`💳 결제 테스트 페이지로 이동합니다. Order ID: ${orderId}`);
+        console.log(` 결제 테스트 페이지로 이동합니다. Order ID: ${orderId}`);
 
         // 2. static 폴더에 있는 payment_test.html로 리다이렉트
         // 쿼리 파라미터로 orderId를 전달하면 HTML 내부 JS가 이를 인식하여 자동 로드합니다.

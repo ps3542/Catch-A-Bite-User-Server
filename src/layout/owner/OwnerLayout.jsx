@@ -1,17 +1,30 @@
 // src/layout/owner/OwnerLayout.jsx
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import OwnerSidebar from "./OwnerSidebar";
 import OwnerHeader from "./OwnerHeader";
+import OwnerStoreContextBar from "../../components/owner/OwnerStoreContextBar.jsx";
+import styles from "./ownerLayout.module.css";
 
 const OwnerLayout = () => {
+  const location = useLocation();
+
   return (
-    <div className="owner-layout" style={{ display: "flex", minHeight: "100vh" }}>
+    <div className={styles.shell}>
       <OwnerSidebar />
-      <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-        <OwnerHeader />
-        <main style={{ flex: 1, padding: "24px", backgroundColor: "#f8f9fa" }}>
-          <Outlet />
-        </main>
+
+      <div className={styles.main}>
+        <OwnerHeader pathname={location.pathname} />
+
+        {/* 로그인 백엔드 전/후 모두 동작: storeId는 localStorage 기반 */}
+        <div className={styles.contextBarWrap}>
+          <OwnerStoreContextBar />
+        </div>
+
+        <div className={styles.content}>
+          <div className={styles.page}>
+            <Outlet />
+          </div>
+        </div>
       </div>
     </div>
   );

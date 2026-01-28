@@ -1,49 +1,78 @@
 // src/layout/owner/OwnerSidebar.jsx
 import { NavLink } from "react-router-dom";
+import styles from "./ownerLayout.module.css";
+import { loadActiveStoreId } from "../../components/owner/OwnerStoreContextBar.jsx";
+
+const icon = (t) => <span className={styles.navIcon}>{t}</span>;
 
 const OwnerSidebar = () => {
-  return (
-    <aside
-      style={{
-        width: "220px",
-        backgroundColor: "#212529",
-        color: "#fff",
-        padding: "16px",
-      }}
-    >
-      <h2 style={{ color: "#fff", marginBottom: "24px" }}>사장님</h2>
+  // store id가 없을 수 있습니다(첫 로그인/매장 미등록 등).
+  // 없는 경우에는 매장 목록으로 유도해서 "없는 storeId로 호출 → 오류"를 막습니다.
+  const storeId = loadActiveStoreId();
 
-      <nav style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-        <NavLink to="/owner/main" style={linkStyle}>
-          대시보드
+  const storeSpecific = (suffix) =>
+    storeId ? `/owner/stores/${storeId}${suffix}` : `/owner/stores`;
+
+  const linkClass = ({ isActive }) =>
+    `${styles.navLink} ${isActive ? styles.active : ""}`;
+
+  return (
+    <aside className={styles.sidebar}>
+      <div className={styles.navSection}>
+        <NavLink to="/owner" className={linkClass}>
+          {icon("")} 대시보드
         </NavLink>
-        <NavLink to="/owner/stores" style={linkStyle}>
-          매장 관리
+
+        {/* 매장: 피그마에 없더라도 실제 필요한 동선 */}
+        <NavLink to="/owner/stores" className={linkClass}>
+          {icon("")} 매장 목록
         </NavLink>
-        <NavLink to="/owner/stores/1/menus" style={linkStyle}>
-          메뉴 관리
+        <NavLink to="/owner/stores/new" className={linkClass}>
+          {icon("")} 매장 등록
         </NavLink>
-        <NavLink to="/owner/stores/1/orders" style={linkStyle}>
-          주문 관리
+      </div>
+
+      <div className={styles.navSection}>
+        <NavLink to={storeSpecific("/orders")} className={linkClass}>
+          {icon("")} 주문 관리
         </NavLink>
-        <NavLink to="/owner/reviews" style={linkStyle}>
-          리뷰 관리
+        <NavLink to="/owner/deliveries" className={linkClass}>
+          {icon("")} 배달 관리
         </NavLink>
-        <NavLink to="/owner/payments" style={linkStyle}>
-          결제 내역
+        <NavLink to={storeSpecific("/reviews")} className={linkClass}>
+          {icon("")} 리뷰 관리
         </NavLink>
-        <NavLink to="/owner/transactions" style={linkStyle}>
-          정산 내역
+        <NavLink to={storeSpecific("/payments")} className={linkClass}>
+          {icon("")} 결제 내역
         </NavLink>
-      </nav>
+        <NavLink to={storeSpecific("/transactions")} className={linkClass}>
+          {icon("")} 정산 내역
+        </NavLink>
+      </div>
+
+      <div className={styles.navSection}>
+        <NavLink to={storeSpecific("/menus")} className={linkClass}>
+          {icon("️")} 메뉴 관리
+        </NavLink>
+        <NavLink to={storeSpecific("/menus/categories")} className={linkClass}>
+          {icon("️")} 카테고리 관리
+        </NavLink>
+        {/* 옵션 관리는 메뉴 선택이 필요하므로 store 기준 진입 후 페이지에서 메뉴를 선택 */}
+        <NavLink to={storeSpecific("/menus/options")} className={linkClass}>
+          {icon("")} 옵션 관리
+        </NavLink>
+      </div>
+
+      <div className={styles.navSection}>
+        <NavLink to={storeSpecific("/edit")} className={linkClass}>
+          {icon("")} 매장 관리
+        </NavLink>
+        <NavLink to={storeSpecific("/images")} className={linkClass}>
+          {icon("️")} 매장 이미지
+        </NavLink>
+      </div>
     </aside>
   );
 };
-
-const linkStyle = ({ isActive }) => ({
-  color: isActive ? "#0d6efd" : "#dee2e6",
-  textDecoration: "none",
-  fontWeight: isActive ? "bold" : "normal",
-});
 
 export default OwnerSidebar;

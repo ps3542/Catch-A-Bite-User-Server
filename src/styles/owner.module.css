@@ -30,6 +30,27 @@
   gap: 10px;
 }
 
+.storeSelect {
+  min-width: 220px;
+  padding: 10px 10px;
+  border: 1px solid var(--owner-border);
+  border-radius: 10px;
+  font-size: 13px;
+  background: #fff;
+  color: var(--owner-text);
+}
+
+.storeContextFixedValue {
+  padding: 10px 12px;
+  border: 1px solid var(--owner-border);
+  border-radius: 10px;
+  font-size: 13px;
+  background: #fafafa;
+  color: var(--owner-text);
+  min-width: 120px;
+  text-align: center;
+}
+
 .storeIdInput {
   width: 120px;
   padding: 10px 10px;
@@ -54,9 +75,35 @@
   cursor: not-allowed;
 }
 
+.outlineButton {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--owner-border);
+  background: #fff;
+  color: var(--owner-text);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.outlineButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.outlineButton:hover {
+  background: #fafafa;
+}
+
 .storeContextHint {
   font-size: 12px;
   color: var(--owner-muted);
+}
+
+.storeContextError {
+  font-size: 12px;
+  color: #b42318;
+  font-weight: 700;
 }
 .table {
   width: 100%;
