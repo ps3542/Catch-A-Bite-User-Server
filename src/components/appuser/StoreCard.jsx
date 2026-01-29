@@ -1,3 +1,4 @@
+/* src/components/appuser/StoreCard.jsx */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -6,7 +7,7 @@ import { HiStar } from 'react-icons/hi';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
-import './StoreCard.css';
+import styles from '../..styles/StoreCard.module.css';
 
 const StoreCard = ({ store }) => {
   const navigate = useNavigate();
@@ -15,14 +16,19 @@ const StoreCard = ({ store }) => {
     navigate(`/user/store/${store.storeId}`);
   };
 
-  // FIX: Access 'storeImageUrl' (singular name from DTO) but treat it as an Array
-  // If it's null/undefined, default to an empty array.
   const images = Array.isArray(store.storeImageUrl) ? store.storeImageUrl : [];
 
+  const isStoreOpen = (status) => {
+    if (!status) return false;
+    const s = status.toString().trim().toUpperCase();
+    return s === 'OPEN' || s === 'TRUE';
+  };
+
   return (
-    <div className="store-card-container">
+    <div className={`${styles.cardBase} ${styles.verticalCard}`}>
+      
       {/* 1. Image Carousel Area */}
-      <div className="card-image-swiper-wrapper">
+      <div className={styles.verticalSwiperWrapper}>
         <Swiper
           modules={[Pagination]}
           pagination={{ clickable: true, dynamicBullets: true }}
@@ -33,12 +39,12 @@ const StoreCard = ({ store }) => {
           {images.length > 0 ? (
             images.map((url, idx) => (
               <SwiperSlide key={idx}>
-                <img src={url} alt={`store-img-${idx}`} className="card-img" />
+                <img src={url} alt={`store-img-${idx}`} className={styles.verticalImg} />
               </SwiperSlide>
             ))
           ) : (
             <SwiperSlide>
-              <div className="card-placeholder">
+              <div className={styles.placeholderVertical}>
                 {store.storeName?.charAt(0)}
               </div>
             </SwiperSlide>
@@ -46,21 +52,21 @@ const StoreCard = ({ store }) => {
         </Swiper>
       </div>
 
-      {/* 2. Text Content (Below Image) */}
-      <div className="card-info" onClick={handleInfoClick}>
-        <div className="card-header">
-           <h3 className="card-title">{store.storeName}</h3>
-           <div className="card-rating">
-              <HiStar className="text-yellow-400" />
-              <span className="font-bold">{store.storeRating?.toFixed(1) || "0.0"}</span>
+      {/* 2. Text Content */}
+      <div className={styles.verticalInfo} onClick={handleInfoClick}>
+        <div className={styles.verticalHeader}>
+           <h3 className={styles.title}>{store.storeName}</h3>
+           <div className={styles.ratingWrapper}>
+              <HiStar className={styles.starIcon} />
+              <span>{store.storeRating?.toFixed(1) || "0.0"}</span>
            </div>
         </div>
         
-        <div className="card-meta">
-           <span className={`status-badge ${isStoreOpen(store.storeOpenStatus) ? 'open' : 'closed'}`}>
+        <div className={styles.meta}>
+           <span className={`${styles.statusBadge} ${isStoreOpen(store.storeOpenStatus) ? styles.statusOpen : styles.statusClosed}`}>
              {isStoreOpen(store.storeOpenStatus) ? '영업중' : '준비중'}
            </span>
-           <span className="dot">·</span>
+           <span className={styles.divider}>·</span>
            <span className="delivery-fee">
              배달팁 {store.storeDeliveryFee > 0 ? `${store.storeDeliveryFee.toLocaleString()}원` : '무료'}
            </span>
@@ -68,12 +74,6 @@ const StoreCard = ({ store }) => {
       </div>
     </div>
   );
-};
-
-const isStoreOpen = (status) => {
-  if (!status) return false;
-  const s = status.toString().trim().toUpperCase();
-  return s === 'OPEN' || s === 'TRUE';
 };
 
 export default StoreCard;

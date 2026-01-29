@@ -81,9 +81,11 @@ export default function UserOrderHistory() {
               <div className="card-top">
                 {/* storeName이 DTO에 추가되었으므로 바로 사용 가능 */}
                 <span className="store-name">{order.storeName || `가게 #${order.storeId}`}</span>
+                
+                {/* Updated: Navigation to UserCurrentOrder */}
                 <button 
                   className="detail-btn"
-                  onClick={() => navigate(`/user/orderDetail/${order.orderId}`)} 
+                  onClick={() => navigate(`/user/currentOrder/${order.orderId}`)} 
                 >
                   상세보기
                 </button>

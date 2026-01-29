@@ -1,5 +1,6 @@
 // React
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 // 로그인
 import useRoleGuard from "../../hooks/useRoleGuard.js";
 // API
@@ -8,7 +9,6 @@ import { appUserStoreOrderService } from "../../api/appuser/StoreOrderService";
 import { appUserFavoriteService } from "../../api/appuser/FavoriteService";
 // CSS
 import './UserMainPage.css';
-// import "../../components/appuser/StoreCarousel.css";
 
 // Carousel 및 관련 스타일
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -24,26 +24,22 @@ const fallbackUser = { name: "사용자 찾기 실페"};
 //디버깅
 const separator = "===================================";
 
-// --- 더미 데이터 영역 ---
-
 const storeCategory = [
-  { id: 1, color: '#FFEBEE', text: '치킨' },
-  { id: 2, color: '#E8F5E9', text: '한식' },
-  { id: 3, color: '#E3F2FD', text: '양식' },
-  { id: 4, color: '#FFF3E0', text: '일식' },
-  { id: 5, color: '#F3E5F5', text: '중식' },
-  { id: 6, color: '#E1F5FE', text: '분식' },
-  { id: 7, color: '#FAFAFA', text: '카페' },
-  { id: 8, color: '#FCE4EC', text: '디저트' },
-  { id: 9, color: '#E0F2F1', text: '기타' }
+  { key: 'chicken', text: '치킨', color: '#FFEBEE' },
+  { key: 'korean', text: '한식', color: '#E8F5E9' },
+  { key: 'chinese', text: '중식', color: '#F3E5F5' },
+  { key: 'japanese', text: '일식', color: '#FFF3E0' },
+  { key: 'western', text: '양식', color: '#E3F2FD' },
+  { key: 'snack', text: '분식', color: '#E1F5FE' },
+  { key: 'pizza', text: '피자', color: '#FFF8E1' }, 
+  { key: 'cafe_dessert', text: '카페/디저트', color: '#FAFAFA' },
+  { key: 'late_night', text: '야식', color: '#E0F2F1' },
+  { key: 'etc', text: '기타', color: '#FCE4EC' }
 ];
 
-// 자주 주문한 매장 더미 데이터
-
-
-// --- 컴포넌트 시작 ---
 
 export default function UserMainPage() {
+  const navigate = useNavigate();
   const { user, loading } = useRoleGuard("USER", fallbackUser);
   const [randomStores, setRandomStores] = useState([]);
   const [favoriteStores, setFavoriteStores] = useState([]);
@@ -80,16 +76,14 @@ export default function UserMainPage() {
       // 자주 주문한 가게
       if(user){
         const userId = user.appUserId;
-        console.log(separator);
-        console.log("user")
-        console.log(user);
-        console.log("UserId: ",userId);
-        console.log(separator);
         const frequent = await appUserStoreOrderService.getFrequentStores(userId,5);
-        console.log(separator);
-        console.log("자주 주문한 가게 목록")
-        console.log(frequent);
-        console.log(separator);
+        // console.log(separator);
+        // console.log("user")
+        // console.log(user);
+        // console.log("UserId: ",userId);
+        // console.log("자주 주문한 가게 목록")
+        // console.log(frequent);
+        // console.log(separator);
         setFrequentStores(frequent);
       }
     } catch(e){
@@ -101,41 +95,46 @@ export default function UserMainPage() {
     };
 
     const loadFavorites = async () => {
-        try {
-          // 1. Get List of Favorites (IDs)
-          const favData = await appUserFavoriteService.getMyFavorites();
-          
-          if (favData && favData.length > 0) {
-            // 2. Fetch Details for each to get images/status
-            const detailsPromises = favData.map(async (fav) => {
-              try {
-                const detail = await appUserStoreService.getStoreDetails(fav.storeId);
-                // Merge the favoriteId (from the list) with the details (from the store API)
-                return { ...detail, favoriteId: fav.favoriteId };
-              } catch (e) {
-                console.error(`Failed to load store ${fav.storeId}`, e);
-                return null; 
-              }
-            });
-    
-            const results = await Promise.all(detailsPromises);
-            setFavoriteStores(results.filter(s => s !== null));
-            console
-          } else {
-            setFavoriteStores([]);
-          }
-        } catch (err) {
-          console.error(err);
-        } finally {
+      try {
+        // 1. Get List of Favorites (IDs)
+        const favData = await appUserFavoriteService.getMyFavorites();
+        
+        if (favData && favData.length > 0) {
+          // 2. Fetch Details for each to get images/status
+          const detailsPromises = favData.map(async (fav) => {
+            try {
+              const detail = await appUserStoreService.getStoreDetails(fav.storeId);
+              // Merge the favoriteId (from the list) with the details (from the store API)
+              return { ...detail, favoriteId: fav.favoriteId };
+            } catch (e) {
+              console.error(`Failed to load store ${fav.storeId}`, e);
+              return null; 
+            }
+          });
+  
+          const results = await Promise.all(detailsPromises);
+          setFavoriteStores(results.filter(s => s !== null));
+          console
+        } else {
+          setFavoriteStores([]);
         }
-      };
+      } catch (err) {
+        console.error(err);
+      } finally {
+      }
+    };
+
+    const handleCategoryClick = (categoryKey) => {
+      console.log("Selected Category:", categoryKey);
+      navigate(`/user/search?storeCategory=${categoryKey}`);
+    };
 
   return (
     <div className="user-main-container" style={{ paddingBottom: '80px' }}>
       
       {/* 1. 상단 배너 영역 */}
       <section style={{ marginBottom: '24px' }}>
-         <StoreCarousel title="오늘의 추천 맛집 🎲" stores={randomStores} pages={1} />
+         <StoreCarousel title="오늘의 추천 맛집" stores={randomStores} pages={1} />
       </section>
 
       {/* 2. 카테고리 아이콘 영역 (Swiper) */}
@@ -148,11 +147,11 @@ export default function UserMainPage() {
           navigation={false} 
           id="storeCategories"
         >
-          {/* banners.map 대신 storeCategory.map으로 수정 */}
           {storeCategory.map((category) => (
-            <SwiperSlide key={category.id}>
+            <SwiperSlide key={category.key}>
               <div
                 className="storeCategory"
+                onClick={() => handleCategoryClick(category.key)}
                 style={{
                   backgroundColor: category.color,
                   height: '70px',

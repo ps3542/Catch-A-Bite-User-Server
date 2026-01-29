@@ -1,0 +1,228 @@
+/* Project Name: catchabite */
+/* File Name: src/pages/user/UserReview.css */
+
+/* 페이지 전체 래퍼: 화면 중앙 정렬 및 배경색 */
+.review-page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9fafb; /* 연한 회색 배경 */
+  padding: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* 리뷰 카드 컨테이너 */
+.review-card {
+  width: 100%;
+  max-width: 480px; /* 모바일 친화적인 폭 */
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+/* 로딩 화면 */
+.loading-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  font-size: 1.125rem;
+}
+
+/* --- 헤더 영역 --- */
+.review-header {
+  background-color: #4f46e5; /* 인디고 색상 */
+  padding: 24px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.header-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.header-subtitle {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #e0e7ff; /* 연한 인디고 */
+}
+
+/* --- 본문 영역 --- */
+.review-body {
+  padding: 24px;
+}
+
+/* 가게 정보 섹션 */
+.store-info-section {
+  border-bottom: 1px solid #f3f4f6;
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+}
+
+.store-name {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1f2937; /* 진한 회색 */
+  margin-bottom: 4px;
+}
+
+.order-items-text {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #6b7280; /* 중간 회색 */
+}
+
+/* 별점 섹션 */
+.rating-section {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.rating-label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #4b5563;
+  margin-bottom: 8px;
+}
+
+.star-container {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.star-btn {
+  background: none;
+  border: none;
+  font-size: 2.25rem; /* 큰 별 크기 */
+  cursor: pointer;
+  transition: transform 0.2s;
+  padding: 0;
+  line-height: 1;
+}
+
+.star-btn:hover {
+  transform: scale(1.1);
+}
+
+.star-btn.filled {
+  color: #facc15; /* 노란색 */
+}
+
+.star-btn.empty {
+  color: #d1d5db; /* 회색 */
+}
+
+.rating-score {
+  margin-top: 4px;
+  font-size: 0.875rem;
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+/* 입력 섹션 */
+.input-section {
+  margin-bottom: 24px;
+}
+
+.input-label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.review-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  min-height: 120px;
+  resize: none;
+  box-sizing: border-box; /* padding 포함 */
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.review-textarea:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+/* 버튼 공통 스타일 */
+.action-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.2s;
+}
+
+/* 제출 버튼 */
+.submit-btn {
+  background-color: #4f46e5;
+  color: #ffffff;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.submit-btn:hover {
+  background-color: #4338ca;
+}
+
+.submit-btn.disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* 취소 버튼 */
+.cancel-btn {
+  background-color: transparent;
+  color: #6b7280;
+}
+
+.cancel-btn:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+/* --- 사장님 답글 플레이스홀더 영역 --- */
+.reply-placeholder-section {
+  background-color: #f9fafb;
+  padding: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.reply-placeholder-box {
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+  color: #9ca3af;
+}
+
+.placeholder-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.placeholder-desc {
+  font-size: 0.75rem;
+}

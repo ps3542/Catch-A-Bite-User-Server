@@ -73,10 +73,13 @@ export default function UserMenuOption() {
   const handleAddToCart = async () => {
     if (!isFormValid()) return;
     
-    // [수정] 백엔드 CartItemDTO 필드명에 맞춰 키 이름 변경 (quantity -> cartItemQuantity)
+    // selectedOptions 객체를 1차원 배열(List<Long>)로 변환
+    const optionIds = Object.values(selectedOptions).flat();
+
     const payload = {
       menuId: menu.menuId,
-      cartItemQuantity: quantity 
+      cartItemQuantity: quantity,
+      optionIds: optionIds
     };
 
     try {

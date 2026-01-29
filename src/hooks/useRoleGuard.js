@@ -27,13 +27,13 @@ export default function useRoleGuard(expectedAccountType, fallbackUser) {
         const roleName = data.roleName;
         const allowedRoles = ALLOWED_ROLE_NAMES[expectedAccountType] || [];
         const realId = data.userId;
-        console.log("ROLEGUARD");
-        console.log("Response")
-        console.log(response);
-        console.log("Response.Data")
-        console.log(data);
-        console.log("Response.data.userId: ", realId)
-        console.log("Roleguard END");
+        // console.log("ROLEGUARD");
+        // console.log("Response")
+        // console.log(response);
+        // console.log("Response.Data")
+        // console.log(data);
+        // console.log("Response.data.userId: ", realId)
+        // console.log("Roleguard END");
         const allowed =
           (accountType && accountType === expectedAccountType) ||
           (roleName && allowedRoles.includes(roleName));

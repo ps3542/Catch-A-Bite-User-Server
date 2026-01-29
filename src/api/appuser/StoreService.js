@@ -47,11 +47,16 @@ export const appUserStoreService = {
       throw new Error("카테고리를 선택해주세요.");
     }
 
-    try {
-      // API: GET /api/v1/appuser/stores/category?name=...
+    try {      
       const response = await axiosInstance.get('/api/v1/appuser/stores/category', {
-        params: { name: categoryName }
+        params: { storeCategory: categoryName }
       });
+      console.log(separator);
+      console.log("StoreService - GetStoresByCategory - Response");
+      console.log(response);
+      console.log(separator);
+      console.log(response.data);
+      console.log(separator);
 
       return response.data;
     } catch (error) {

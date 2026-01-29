@@ -64,6 +64,8 @@ export const appUserStoreOrderService = {
     }
 
     try {
+      console.log("StoreOrder - GetAllStoreOrderforId");
+      console.log("appUserId: ", appUserId);
       const response = await axiosInstance.get(`/api/v1/appuser/store-orders/user/${appUserId}`);
       return response.data.data; 
     } catch (error) {
@@ -150,7 +152,23 @@ export const appUserStoreOrderService = {
       console.error(separator);
       return []; // 에러 발생 시 빈 배열 반환하여 화면 깨짐 방지
     }
-  }
+  },
+
+  getOrderDetails: async (orderId) => {
+    const separator = "==================================";
+
+        try {
+            // Adjust endpoint to match your Backend Controller
+            const response = await axiosInstance.get(`/api/v1/appuser/store-orders/${orderId}`);
+            console.log(separator);
+            console.log("response.data.data");
+            console.log(response.data.data);
+            console.log(separator);
+            return response.data.data;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 export default appUserStoreOrderService;

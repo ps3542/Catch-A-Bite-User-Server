@@ -93,16 +93,15 @@ export default function UserCart() {
       <div className="cart-items-list">
         {cartData.items.map((item) => (
           <div key={item.cartItemId} className="cart-item">
-            <div className="cart-item-img-box">
-              {item.menuImageUrl ? (
-                <img src={item.menuImageUrl} alt={item.menuName} className="cart-item-img" />
-              ) : (
-                <div className="cart-no-img">No Image</div>
-              )}
-            </div>
-
             <div className="cart-item-info">
               <h3 className="cart-item-name">{item.menuName}</h3>
+              {item.menuOptions && item.menuOptions.length > 0 && (
+                <div className="cart-item-options-list">
+                  {item.menuOptions.map((opt, idx) => (
+                    <span key={idx} className="cart-option-text">- {opt}</span>
+                  ))}
+                </div>
+              )}
               <p className="cart-item-price">{item.menuPrice.toLocaleString()}원</p>
             </div>
 
