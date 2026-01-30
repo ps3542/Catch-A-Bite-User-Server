@@ -1,0 +1,273 @@
+:global(:root) {
+  --owner-bg: #ffffff;
+  --owner-page-bg: #f3f4f6;
+  --owner-sidebar: #111111;
+  --owner-sidebar-border: rgba(255, 255, 255, 0.12);
+  --owner-text: #111111;
+  --owner-muted: #6b7280;
+  --owner-line: #e5e7eb;
+  --owner-card: #ffffff;
+  --owner-primary: #111111;
+}
+
+.shell {
+  display: flex;
+  min-height: 100vh;
+  background: var(--owner-page-bg);
+}
+
+/* Sidebar */
+.sidebar {
+  width: 260px;
+  background: var(--owner-sidebar);
+  color: #fff;
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: auto;
+}
+
+.sidebarTop {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sidebarBrand {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 8px 6px 14px;
+  border-bottom: 1px solid var(--owner-sidebar-border);
+}
+
+.sidebarLogoWrap {
+  position: relative;
+  width: 190px;
+  height: auto;
+}
+
+.sidebarLogoLink {
+  display: inline-block;
+  padding: 10px 8px 14px;
+  cursor: pointer;
+}
+
+.sidebarLogo {
+  width: 190px;
+  height: auto;
+  display: block;
+}
+
+/* 기본: 밝은 배경(흰 바탕)에서는 검정 로고 */
+.sidebarLogoLight {
+  display: none;
+}
+
+.sidebarLogoDark {
+  display: block;
+}
+
+/* Owner 사이드바는 검정 배경이므로 흰 로고 사용 */
+.sidebar .sidebarLogoLight {
+  display: block;
+}
+
+.sidebar .sidebarLogoDark {
+  display: none;
+}
+
+.sidebarBrandText {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.logoLink {
+  display: inline-flex;
+  text-decoration: none;
+}
+
+.logo {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+
+.nav {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 0;
+
+  padding: 14px 10px;
+  border-top: 1px solid var(--owner-sidebar-border);
+
+  color: #fff;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 10px;
+}
+
+.navLink:last-child {
+  border-bottom: 1px solid var(--owner-sidebar-border);
+}
+
+.navLink:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.navLinkActive {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.navIcon {
+  width: 22px;
+  display: inline-flex;
+  justify-content: center;
+  opacity: 0.95;
+}
+
+.sidebarBottom {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--owner-sidebar-border);
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.sidebarBottomHint {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* Main */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+
+  height: 100vh;
+  overflow: hidden;
+}
+
+.header {
+  height: 64px;
+  background: var(--owner-bg);
+  border-bottom: 1px solid var(--owner-line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.headerTitle {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--owner-text);
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.logoutBtn {
+  border: 1px solid var(--owner-line);
+  background: #fff;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.logoutBtn:hover {
+  background: #f9fafb;
+}
+
+.contextBarWrap {
+  padding: 12px 28px 0;
+}
+
+.content {
+  flex: 1;
+  overflow: auto;
+  padding: 16px 28px 60px;
+}
+
+.page {
+  background: var(--owner-bg);
+  border: 1px solid var(--owner-line);
+  border-radius: 14px;
+  padding: 28px;
+}
+
+.pageTitle {
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0 0 18px;
+}
+
+
+/* Sidebar groups */
+.navGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.navGroupHeader {
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: transparent;
+
+  padding: 12px 10px;
+  border-top: 1px solid var(--owner-sidebar-border);
+
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.navGroupHeader:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.navGroupLinksOpen {
+  display: flex;
+  flex-direction: column;
+}
+
+.navGroupLinksClosed {
+  display: none;
+}
+
+.navGroupLinks .navLink {
+  border-top: 0;
+  padding: 12px 10px 12px 18px;
+  font-size: 16px;
+  font-weight: 650;
+}
+
+.navLinkText {
+  display: inline-block;
+}
