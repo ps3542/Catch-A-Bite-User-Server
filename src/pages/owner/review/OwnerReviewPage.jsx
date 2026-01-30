@@ -221,7 +221,16 @@ export default function OwnerReviewPage() {
         ) : (
           filteredContent.map((r, idx) => {
             const reviewId = r.reviewId ?? r.id ?? idx;
-            const writer = r.writerNickname ?? r.appUserNickname ?? r.nickname ?? r.memberNickname ?? "익명";
+            const nickname =
+              r.authorNickname ??
+              r.appUserNickname ??
+              r.userNickname ??
+              r.nickname ??
+              r.memberNickname ??
+              "";
+
+             const writer = String(nickname).trim() ? String(nickname).trim() : "익명";
+
             const rating = r.rating ?? r.reviewRating ?? 0;
             const createdAt = r.reviewCreatedAt ?? r.createdAt ?? r.regDate ?? "";
             const text = r.content ?? r.reviewContent ?? "-";

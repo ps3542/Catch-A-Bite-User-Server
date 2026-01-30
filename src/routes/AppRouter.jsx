@@ -6,7 +6,6 @@ import RoleSelectPage from "../pages/RoleSelectPage.jsx";
 import SignupOwnerPage from "../pages/SignupOwnerPage.jsx";
 import SignupRiderPage from "../pages/SignupRiderPage.jsx";
 import SignupUserPage from "../pages/SignupUserPage.jsx";
-
 import RiderMainPage from "../pages/rider/RiderMainPage.jsx";
 
 import AppUserRouter from "./AppUserRouter.jsx";
@@ -43,18 +42,9 @@ export default function AppRouter({ onAuthRefresh }) {
         element={<RoleLoginPage role="RIDER" onAuthRefresh={onAuthRefresh} />}
       />
 
-            {/* --- 사업자 페이지 --- */}
-            <Route path="/owner/main" element={<OwnerMainPage />} />
-
       {/* --- 사용자 페이지 --- */}
-      <Route path="/user" element={<AppUserBasicLayout />}>
-        <Route index element={<Navigate to="main" replace />} />
-        <Route path="main" element={<UserMainPage />} />
-        <Route path="search" element={<UserSearchResult />} />
-        <Route path="favorite" element={<UserFavoriteStores />} />
-        <Route path="store/:storeId" element={<UserStorePage />} />
-        <Route path="menu/:menuId" element={<UserMenuOption />} />
-      </Route>
+      <Route path="/user/*" element={<AppUserRouter />} />
+
 
       {/* --- 사업자 페이지 --- */}
       <Route path="/owner/*" element={<AppOwnerRouter />} />
