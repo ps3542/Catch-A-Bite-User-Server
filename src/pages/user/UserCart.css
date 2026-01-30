@@ -1,0 +1,233 @@
+/* ======================================================================
+ * 파일명: UserCart.css
+ * 목적: 장바구니 페이지(UserCart.jsx)의 모든 UI 스타일을 정의합니다.
+ * 주요 수정: 하단 푸터 가림 현상 방지를 위해 컨테이너 하단 여백(200px) 추가.
+ * 정렬 기준: JSX 내 등장 순서 (로딩 -> 빈 상태 -> 장바구니 상세)
+ * ====================================================================== */
+
+/* 1. 로딩 상태 (cart-loading) */
+.cart-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 1.1rem;
+    color: #666;
+}
+
+/* 2. 장바구니가 비어있는 상태 (cart-empty-...) */
+.cart-empty-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    text-align: center;
+}
+
+.cart-empty-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+}
+
+.cart-empty-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.cart-empty-desc {
+    color: #888;
+    margin-bottom: 30px;
+}
+
+.cart-empty-btn {
+    padding: 12px 24px;
+    background-color: #ff6b00;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* 3. 장바구니 메인 컨테이너 */
+/* ----------------------------------------------------------------------
+ * [중요] 하단 여백 처리
+ * 배달 주문하기 버튼이 푸터 등에 의해 가려지지 않도록 
+ * 컨테이너 하단에 최소 200px의 여백을 확보합니다.
+ * ---------------------------------------------------------------------- */
+.cart-page-container {
+    padding: 20px;
+    background-color: #fff;
+    min-height: 100vh;
+    padding-bottom: 200px; 
+}
+
+.cart-page-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: #333;
+}
+
+/* 4. 매장 정보 헤더 (cart-store-header) */
+.cart-store-header {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.cart-store-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.cart-min-order {
+    font-size: 0.9rem;
+    color: #888;
+}
+
+/* 5. 아이템 리스트 및 개별 아이템 (cart-item) */
+.cart-items-list {
+    margin-bottom: 30px;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px 0;
+    border-bottom: 1px solid #f9f9f9;
+}
+
+.cart-item-info {
+    flex: 1;
+}
+
+.cart-item-name {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.cart-item-options-list {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 8px;
+}
+
+.cart-option-text {
+    font-size: 0.85rem;
+    color: #777;
+    margin-bottom: 2px;
+}
+
+.cart-item-price {
+    font-weight: 500;
+    color: #333;
+}
+
+/* 6. 수량 조절부 (cart-qty-control) */
+.cart-qty-control {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: 0 15px;
+}
+
+.cart-qty-btn {
+    width: 30px;
+    height: 30px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.cart-qty-val {
+    padding: 0 10px;
+    font-weight: 600;
+}
+
+/* 7. 아이템 합계 및 삭제 (cart-item-total) */
+.cart-item-total {
+    text-align: right;
+    min-width: 80px;
+}
+
+.cart-total-price {
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.cart-delete-btn {
+    background: none;
+    border: 1px solid #eee;
+    color: #999;
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* 8. 결제 요약 섹션 (cart-bill-summary) */
+.cart-bill-summary {
+    background-color: #f8f8f8;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+}
+
+.cart-bill-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.cart-divider {
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.cart-bill-val {
+    font-weight: 500;
+}
+
+.cart-bill-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.cart-final-price {
+    color: #ff6b00;
+    font-size: 1.3rem;
+}
+
+/* 9. 하단 주문 버튼 (cart-order-btn) */
+.cart-order-btn {
+    width: 100%;
+    padding: 16px;
+    background-color: #ff6b00;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.cart-order-btn.disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}

@@ -1,0 +1,125 @@
+/* Card Container */
+.scl-card {
+  display: flex;
+  background-color: #ffffff;
+  border-radius: 0.75rem; /* rounded-xl */
+  border: 1px solid #f3f4f6; /* gray-100 */
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  padding: 1rem;
+  cursor: pointer;
+  transition: box-shadow 0.2s, background-color 0.1s;
+}
+
+.scl-card:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.scl-card:active {
+  background-color: #f9fafb; /* gray-50 */
+}
+
+/* Image Wrapper */
+.scl-image-wrapper {
+  width: 5rem;  /* w-20 */
+  height: 5rem; /* h-20 */
+  background-color: #f9fafb;
+  border-radius: 0.5rem;
+  flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scl-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scl-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af; /* gray-400 */
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+/* Info Area */
+.scl-info {
+  margin-left: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.scl-title {
+  font-weight: 700;
+  color: #111827; /* gray-900 */
+  font-size: 1.125rem; /* text-lg */
+  margin: 0 0 0.25rem 0;
+  transition: color 0.2s;
+}
+
+.scl-card:hover .scl-title {
+  color: #15803d; /* dark green on hover */
+}
+
+.scl-meta {
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem; /* text-sm */
+  color: #4b5563; /* gray-600 */
+}
+
+.scl-star-icon {
+  color: #facc15; /* yellow-400 */
+  margin-right: 0.25rem;
+}
+
+.scl-rating {
+  font-weight: 700;
+  color: #111827;
+}
+
+.scl-divider {
+  margin: 0 0.25rem;
+  color: #d1d5db; /* gray-300 */
+}
+
+/* Action Area (Heart) */
+.scl-action {
+  margin-left: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 0.25rem;
+}
+
+.scl-remove-btn {
+  padding: 0.25rem;
+  border-radius: 50%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scl-remove-btn:hover {
+  background-color: #fef2f2; /* red-50 */
+}
+
+.scl-heart-icon {
+  color: #ef4444; /* red-500 */
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
+}

@@ -1,7 +1,9 @@
+import axiosInstance from "../axios";
+
 /**
  * AddressService: 배송지 관리 API 통신 모듈
  */
-export const addressService = {
+export const AppUserAddressService = {
   
   // ==========================================================
   // 1. 배송지 추가 (POST)
@@ -18,18 +20,8 @@ export const addressService = {
     }
 
     try {
-      const response = await fetch(`/api/v1/appuser/addresses`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(addressData)
-      });
-
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.message || "배송지 등록 실패");
-      return result;
+      const response = await axiosInstance.post('/api/v1/appuser/addresses', addressData);
+      return response.data;
     } catch (error) {
       console.error(separator);
       console.error("Address Create Error:", error);
@@ -52,14 +44,8 @@ export const addressService = {
     }
 
     try {
-      const response = await fetch(`/api/v1/appuser/addresses/${addressId}`, {
-        method: 'GET',
-        headers: { 'Accept': 'application/json' }
-      });
-
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.message || "배송지 조회 실패");
-      return result;
+      const response = await axiosInstance.get(`/api/v1/appuser/addresses/${addressId}`);
+      return response.data;
     } catch (error) {
       console.error(separator);
       console.error("Address Read Error:", error);
@@ -82,18 +68,8 @@ export const addressService = {
     }
 
     try {
-      const response = await fetch(`/api/v1/appuser/addresses/${addressId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(addressData)
-      });
-
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.message || "배송지 수정 실패");
-      return result;
+      const response = await axiosInstance.put(`/api/v1/appuser/addresses/${addressId}`, addressData);
+      return response.data;
     } catch (error) {
       console.error(separator);
       console.error("Address Update Error:", error);
@@ -116,19 +92,34 @@ export const addressService = {
     }
 
     try {
-      const response = await fetch(`/api/v1/appuser/addresses/${addressId}`, {
-        method: 'DELETE',
-        headers: { 'Accept': 'application/json' }
-      });
-
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.message || "배송지 삭제 실패");
-      return result;
+      const response = await axiosInstance.delete(`/api/v1/appuser/addresses/${addressId}`);
+      return response.data;
     } catch (error) {
       console.error(separator);
       console.error("Address Delete Error:", error);
       console.error(separator);
       throw error;
     }
+  },  
+  
+  // ==========================================================
+  // 5. 내 배송지 목록 조회 (GET)
+  // ==========================================================
+  getMyAddresses: async (userId) => {
+    try {
+      // Call the new endpoint we made in Controller
+      console.log("API /api/v1/appuser/addresses/list?userId=${userId} 호출 전");
+      console.log("userId:", userId);
+      const response = await axiosInstance.get(`/api/v1/appuser/addresses/list?userId=${userId}`);
+      console.log("Address List Response:", response.data);
+      console.log("Address List Response.data.data:", response.data.data);
+      console.log("Address List Response.data.header:", response.data.header);
+      return response.data; // Expected: { header:..., data: [...] }
+    } catch (error) {
+      console.error("Address List Fetch Error:", error);
+      throw error;
+    }
   }
-};
+}
+
+export default AppUserAddressService;

@@ -1,3 +1,5 @@
+import axiosInstance from "../axios";
+
 /**
  * StoreService: 매장 검색 및 조회 API 통신 모듈
  */
@@ -17,14 +19,13 @@ export const appUserStoreService = {
     }
 
     try {
-      const response = await fetch(`/api/v1/appuser/stores/search?keyword=${encodeURIComponent(keyword)}`, {
-        method: 'GET',
-        headers: { 'Accept': 'application/json' }
+      // API: GET /api/v1/appuser/stores/search?keyword=...
+      const response = await axiosInstance.get('/api/v1/appuser/stores/search', {
+        params: { keyword: keyword }
       });
 
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.message || "매장 검색 실패");
-      return result;
+      // Axios returns the payload in response.data
+      return response.data;
     } catch (error) {
       console.error(separator);
       console.error("Store Search Error:", error);
@@ -46,15 +47,18 @@ export const appUserStoreService = {
       throw new Error("카테고리를 선택해주세요.");
     }
 
-    try {
-      const response = await fetch(`/api/v1/appuser/stores/category?name=${encodeURIComponent(categoryName)}`, {
-        method: 'GET',
-        headers: { 'Accept': 'application/json' }
+    try {      
+      const response = await axiosInstance.get('/api/v1/appuser/stores/category', {
+        params: { storeCategory: categoryName }
       });
+      console.log(separator);
+      console.log("StoreService - GetStoresByCategory - Response");
+      console.log(response);
+      console.log(separator);
+      console.log(response.data);
+      console.log(separator);
 
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.message || "카테고리 조회 실패");
-      return result;
+      return response.data;
     } catch (error) {
       console.error(separator);
       console.error("Store Category Error:", error);
@@ -70,50 +74,44 @@ export const appUserStoreService = {
     const separator = "======================================================================";
     
     // [LOG] Entry
-    console.log(separator);
-    console.log(`[StoreService] ENTER getStoreDetails (storeId: ${storeId})`);
+    //console.log(`[appUserStoreService] getStoreDetails (storeId: ${storeId})`);
 
     if (!storeId || storeId <= 0) {
-      console.error("[StoreService] Error: Invalid Store ID");
+      console.error("[appUserStoreService] Error: Invalid Store ID");
       throw new Error("유효하지 않은 매장 ID입니다.");
     }
 
     try {
-      const response = await fetch(`/api/v1/appuser/stores/${storeId}`, {
-        method: 'GET',
-        headers: { 'Accept': 'application/json' }
-      });
+      // API: GET /api/v1/appuser/stores/{storeId}
+      const response = await axiosInstance.get(`/api/v1/appuser/stores/${storeId}`);
 
-      console.log(`[StoreService] HTTP Status: ${response.status}`);
+      // 200 확인 전용
+      //console.log(`[appUserStoreService] HTTP Status: ${response.status}`);
 
-      // 204 No Content
+      // 204 No Content handling
       if (response.status === 204) {
-        console.log("[StoreService] EXIT - No Content");
+        console.log("[appUserStoreService] EXIT - No Content");
         return null;
       }
 
-      const result = await response.json();
+      const result = response.data;
 
       // [LOG] Inspect the raw structure from backend
-      console.log("[StoreService] Raw Backend Response:", result);
+      //console.log("[appUserStoreService] Raw Backend Response:", result);
 
-      if (!response.ok) {
-        throw new Error(result.message || "매장 상세 조회 실패");
-      }
-
-      
-      // If result has a .data property (ApiResponse), use it. Otherwise use result directly.
+      // Unwrap logic: If result has a .data property (ApiResponse), use it. Otherwise use result directly.
       const finalData = result.data ? result.data : result;
 
       // [LOG] Exit with final data
-      console.log("[StoreService] EXIT - Returning Data:", finalData);
-      console.log(separator);
+      //console.log(separator);
+      //console.log("[appUserStoreService] EXIT - Returning Data:", finalData);
+      //console.log(separator);
 
       return finalData;
 
     } catch (error) {
       console.error(separator);
-      console.error("[StoreService] CRITICAL ERROR:", error);
+      console.error("[appUserStoreService] CRITICAL ERROR:", error);
       console.error(separator);
       throw error;
     }
@@ -133,14 +131,9 @@ export const appUserStoreService = {
     }
 
     try {
-      const response = await fetch(`/api/v1/appuser/stores/${storeId}/menus`, {
-        method: 'GET',
-        headers: { 'Accept': 'application/json' }
-      });
-
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.message || "메뉴 조회 실패");
-      return result;
+      // API: GET /api/v1/appuser/stores/{storeId}/menus
+      const response = await axiosInstance.get(`/api/v1/appuser/stores/${storeId}/menus`);
+      return response.data;
     } catch (error) {
       console.error(separator);
       console.error("Store Menus Error:", error);
@@ -151,17 +144,15 @@ export const appUserStoreService = {
 
   // ==========================================================
   // 5. 전체 매장 목록 조회 (GET)
+  // 모든 OPEN한 매장 목록을 호출함
   // ==========================================================
   getRandomStores: async () => {
     try {
-      const response = await fetch(`/api/v1/appuser/stores/random`, {
-        method: 'GET',
-        headers: { 'Accept': 'application/json' }
-      });
-
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.message || "매장 조회 실패");
+      // API: GET /api/v1/appuser/stores/random
+      const response = await axiosInstance.get('/api/v1/appuser/stores/random');
       
+      const result = response.data;
+      // Return .data if wrapped in ApiResponse, else return result
       return result.data || result; 
     } catch (error) {
       console.error("Random Store Error:", error);
@@ -174,19 +165,10 @@ export const appUserStoreService = {
   // ==========================================================
   getFavoriteStores: async () => {
     try {
-      const response = await fetch(`/api/v1/appuser/favorites`, {
-        method: 'GET',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json' 
-          // Note: Credentials (cookies) are usually handled automatically by the browser
-        }
-      });
-
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.message || "즐겨찾기 조회 실패");
+      // API: GET /api/v1/appuser/favorites
+      const response = await axiosInstance.get('/api/v1/appuser/favorites');
       
-      // Return the data list (List<UserFavoriteStoreResponseDTO>)
+      const result = response.data;
       return result.data || result; 
     } catch (error) {
       console.error("Favorite Fetch Error:", error);
@@ -201,13 +183,9 @@ export const appUserStoreService = {
     if (!menuId) throw new Error("Menu ID is required");
     
     try {
-      const response = await fetch(`/api/v1/appuser/menus/${menuId}`, {
-        method: 'GET',
-        headers: { 'Accept': 'application/json' }
-      });
-
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.message || "메뉴 상세 조회 실패");
+      // API: GET /api/v1/appuser/menus/{menuId}
+      const response = await axiosInstance.get(`/api/v1/appuser/menus/${menuId}`);
+      const result = response.data;
       return result.data || result;
     } catch (error) {
       console.error("Menu Detail Error:", error);
@@ -215,3 +193,5 @@ export const appUserStoreService = {
     }
   }
 };
+
+export default appUserStoreService;

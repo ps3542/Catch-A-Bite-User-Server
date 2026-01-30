@@ -13,3 +13,9 @@ export const AUTH_ENDPOINTS = {
   riderSignup: "/api/v1/deliverer/auth/signup",
   riderExistsEmail: "/api/v1/deliverer/auth/exists/email",
 };
+
+export const CART_ENDPOINTS = {
+  myCart: "/api/v1/appuser/cart/my",
+  items: "/api/v1/appuser/cart/items", 
+};
+

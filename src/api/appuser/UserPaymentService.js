@@ -23,4 +23,6 @@ export const paymentService = {
         // 쿼리 파라미터로 orderId를 전달하면 HTML 내부 JS가 이를 인식하여 자동 로드합니다.
         window.location.href = `/payment_test.html?orderId=${orderId}`;
     }
-};
+}
+
+export default paymentService;

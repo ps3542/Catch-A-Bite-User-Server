@@ -1,0 +1,82 @@
+.store-card-container {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  margin-bottom: 24px; /* Spacing between cards in a list */
+}
+
+/* --- Image Swiper --- */
+.card-image-swiper-wrapper {
+  width: 100%;
+  aspect-ratio: 16 / 9; /* Fixed height ratio */
+  position: relative;
+  background-color: #f3f4f6;
+}
+
+.card-swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Pagination Dots Customization */
+.swiper-pagination-bullets {
+  display: none !important; /* Use !important to ensure it overrides default Swiper styles */
+}
+
+.card-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: #ccc;
+  background-color: #eee;
+}
+
+/* --- Info Area --- */
+.card-info {
+  padding: 16px;
+  cursor: pointer;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111;
+  margin: 0;
+}
+
+.card-rating {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: #333;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #666;
+}
+
+.status-badge.open { color: #16a34a; font-weight: 600; }
+.status-badge.closed { color: #dc2626; font-weight: 600; }
+.dot { margin: 0 6px; color: #ddd; }

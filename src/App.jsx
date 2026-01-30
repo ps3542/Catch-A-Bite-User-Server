@@ -38,16 +38,11 @@ export default function App() {
     refreshMe().catch(() => {});
   }, []);
 
-  const statusText = authState.loading
-    ? "세션 확인 중..."
-    : authState.isAuthenticated
-      ? `로그인됨: ${authState.accountType ?? authState.roleName ?? "-"}`
-      : "비로그인";
-
+  
   return (
-    <>
-      <div className={styles.statusBadge}>{statusText}</div>
+    // <>
+    //   <div className={styles.statusBadge}>{statusText}</div>
       <AppRouter onAuthRefresh={refreshMe} />
-    </>
+    // </>
   );
 }

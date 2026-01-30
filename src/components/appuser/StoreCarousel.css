@@ -1,6 +1,8 @@
+/* src/components/appuser/StoreCarousel.css */
+
 .store-section {
   margin: 24px 0;
-  padding-left: 16px; /* Left padding for the title */
+  padding-left: 16px;
 }
 
 .section-title {
@@ -11,53 +13,78 @@
 }
 
 .store-swiper {
-  padding-right: 16px; /* Right padding for the last slide */
+  padding-right: 16px;
 }
 
+.swiper-pagination-bullets {
+  display: none !important; /* Use !important to ensure it overrides default Swiper styles */
+}
+
+/* --- CARD CONTAINER --- */
 .store-card {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 8px;
   cursor: pointer;
+  border-radius: 12px;
+  overflow: visible; /* Allows content to flow outside if needed */
+  width: 100%;
+  aspect-ratio: auto; /* Let height be determined by content */
 }
 
+/* --- IMAGE --- */
 .store-image-placeholder {
   width: 100%;
-  aspect-ratio: 16 / 9; /* Standard video/image ratio */
+  aspect-ratio: 16 / 9; /* Enforce 16:9 ratio for the image */
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-size: 24px;
+  background-color: #f3f4f6; /* Light gray background */
+  color: #ccc;
+  font-size: 40px;
   font-weight: bold;
+  overflow: hidden; /* Clips the image corners */
 }
 
+.store-img-real {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --- INFO (Text Below Image) --- */
 .store-info {
+  position: static; /* Removes overlay positioning */
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
+  margin-top: 8px; /* Spacing between image and text */
+  padding: 0;
+  background: none;
 }
 
+/* --- TEXT STYLES (Dark for white background) --- */
 .store-name {
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 700;
   margin: 0;
-  color: #111;
+  color: #111; /* Dark text */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-shadow: none;
 }
 
 .store-meta {
   display: flex;
   align-items: center;
   font-size: 13px;
-  color: #555;
+  color: #666; /* Gray text */
 }
 
 .star-icon {
-  color: #FFC107; /* Amber for star */
+  color: #FFC107;
   margin-right: 2px;
 }
 
@@ -74,4 +101,14 @@
 .delivery-fee {
   font-size: 12px;
   color: #888;
+}
+
+/* Status Colors */
+.status-open {
+  color: #16a34a; /* Green */
+  font-weight: 600;
+}
+.status-close {
+  color: #dc2626; /* Red */
+  font-weight: 600;
 }

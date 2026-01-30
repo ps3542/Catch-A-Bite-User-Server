@@ -17,7 +17,7 @@ const Footer = () => {
                 <HiOutlineHeart size={24} />
                 <span>즐겨찾기</span>
             </NavLink>
-            <NavLink to='/user/order' className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
+            <NavLink to='/user/orderHistory' className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
                 <HiOutlineReceiptTax size={24} />
                 <span>주문내역</span>
             </NavLink>
