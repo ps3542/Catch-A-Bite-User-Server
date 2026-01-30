@@ -1,166 +1,304 @@
-/* src/pages/user/UserOrder.css */
-.order-page-container {
+/* UserOrder.css - Updated with Address Header Design */
+
+/* ... (기존 루트 변수 및 기본 설정은 유지) ... */
+:root {
+  /* ... (생략: 기존에 정의된 색상 변수들) ... */
+  --color-white: rgba(255, 255, 255, 1);
+  --color-background: rgba(252, 252, 249, 1);
+  --color-text: rgba(31, 33, 33, 1);
+  --color-primary: rgba(33, 128, 141, 1);
+}
+
+.user-order-container {
+    width: 100%;
     max-width: 600px;
     margin: 0 auto;
-    padding: 20px;
-    background-color: #f8f9fa;
+    background-color: var(--color-surface);
     min-height: 100vh;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    padding-bottom: 80px; /* 하단 버튼 공간 확보 */
 }
 
-.order-header {
-    margin-bottom: 20px;
-    text-align: center;
+/* ===== [NEW] Styled Address Header Section ===== */
+.delivery-address-section {
+    padding: 0; /* 내부 컨테이너가 패딩을 가짐 */
+    background-color: #ffffff;
+    border-bottom: 1px solid var(--color-card-border);
 }
 
-.order-header h2 {
-    font-size: 24px;
-    font-weight: 700;
-    color: #333;
+.address-header-styled {
+    display: flex;
+    align-items: center;
+    padding: 20px 20px 10px 20px; /* 상단 여백 확보 */
+    background-color: #ffffff;
 }
 
-/* Section Cards */
-.order-section {
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+/* 핀 아이콘 스타일 */
+.icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
 }
 
-.section-title {
+.location-icon {
+    font-size: 28px;
+    color: #b0bec5; /* 연한 회색/하늘색 톤 */
+}
+
+/* 텍스트 영역 */
+.text-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+}
+
+.main-row {
+    display: flex;
+    align-items: center;
     font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 12px;
-    color: #333;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 8px;
+    color: #111111;
+    line-height: 1.2;
 }
 
-/* Address Selection */
-.address-select-box {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+.address-name {
+    font-weight: 800; /* 매우 굵게 */
+}
+
+.suffix-text {
+    font-weight: 700;
+    margin-left: 4px;
+}
+
+.sub-row {
     font-size: 14px;
+    color: #666666;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+/* 주소 선택 드롭다운 (헤더 아래 배치) */
+.address-select-wrapper {
+    padding: 0 20px 20px 20px;
+}
+
+.address-select {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+}
+
+/* ===== Store Name Section ===== */
+.store-name-section {
+    padding: 20px;
+    background-color: #fff;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.store-name {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+/* ===== Menu Items Section ===== */
+.menu-items-section {
+    padding: 0 20px;
     background-color: #fff;
     margin-bottom: 10px;
 }
 
-.no-address-warning {
-    color: #e53e3e;
-    font-size: 13px;
-    margin-bottom: 10px;
+.menu-item {
+    padding: 20px 0;
+    border-bottom: 1px solid #f5f5f5;
 }
 
-/* Request Inputs */
-.request-input-group {
-    margin-bottom: 15px;
-}
-.request-input-group label {
-    display: block;
-    font-size: 13px;
-    color: #666;
-    margin-bottom: 5px;
-}
-.request-input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 14px;
-    resize: none;
+.menu-item:last-child {
+    border-bottom: none;
 }
 
-/* Order Summary List */
-.order-item-row {
+.menu-item-name {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.menu-item-footer {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
+    align-items: center;
     font-size: 14px;
 }
-.item-name { color: #555; }
-.item-price { font-weight: 600; color: #333; }
 
-/* Payment Method */
-.payment-method-options {
+.qty-display {
+    color: #666;
+}
+
+.menu-item-price {
+    font-weight: 600;
+}
+
+/* ===== Delivery Fee Section ===== */
+.delivery-fee-section {
+    padding: 20px;
+    background-color: #fff;
+    border-top: 10px solid #f5f5f5; /* 섹션 구분감 */
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.fee-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.fee-label {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.fee-amount {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* ===== Requests Section ===== */
+.requests-section {
+    padding: 20px;
+    background-color: #fff;
+    border-bottom: 10px solid #f5f5f5;
+}
+
+.request-group {
+    margin-bottom: 16px;
+}
+
+.request-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.request-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+/* ===== Payment Method Section ===== */
+.payment-method-section {
+    padding: 20px;
+    background-color: #fff;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.section-label {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.payment-options {
     display: flex;
     gap: 10px;
 }
-.method-btn {
+
+.payment-btn {
     flex: 1;
     padding: 12px;
     border: 1px solid #ddd;
-    background: #fff;
     border-radius: 8px;
-    cursor: pointer;
+    background: #fff;
     font-weight: 600;
     color: #666;
-    transition: all 0.2s;
-}
-.method-btn.selected {
-    border-color: #667eea;
-    color: #667eea;
-    background: #f0f4ff;
+    cursor: pointer;
 }
 
-/* Bill Summary */
-.bill-row {
+.payment-btn.active {
+    border-color: var(--color-primary);
+    background-color: rgba(33, 128, 141, 0.1);
+    color: var(--color-primary);
+}
+
+/* ===== Payment Summary Section ===== */
+.payment-summary-section {
+    padding: 20px;
+    background-color: #fff;
+    margin-bottom: 80px; /* 버튼 가림 방지 */
+}
+
+.summary-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 8px;
-    font-size: 14px;
+    margin-bottom: 10px;
+    font-size: 15px;
     color: #666;
 }
-.bill-total {
+
+.summary-value {
+    color: #333;
+    font-weight: 500;
+}
+
+.summary-divider {
+    height: 1px;
+    background-color: #eee;
+    margin: 15px 0;
+}
+
+.total-row {
     display: flex;
     justify-content: space-between;
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 2px solid #eee;
+    align-items: center;
+}
+
+.total-label {
     font-size: 18px;
     font-weight: 700;
-    color: #333;
 }
-.total-price { color: #667eea; }
 
-/* Bottom Action */
-.order-footer {
+.total-amount {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--color-primary);
+}
+
+/* ===== Checkout Button ===== */
+.checkout-button-section {
     position: fixed;
-    bottom: 0;
+    bottom: 60px;
     left: 0;
     right: 0;
-    padding: 20px;
-    background: white;
-    box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
-    display: flex;
-    justify-content: center;
-}
-.order-footer-content {
-    width: 100%;
     max-width: 600px;
+    margin: 0 auto;
+    padding: 16px 20px;
+    background-color: #fff;
+    border-top: 1px solid #eee;
+    z-index: 100;
 }
 
-.submit-order-btn {
+.checkout-btn {
     width: 100%;
     padding: 16px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-color: var(--color-primary);
     color: white;
     border: none;
-    border-radius: 12px;
-    font-size: 16px;
+    border-radius: 8px;
+    font-size: 18px;
     font-weight: 700;
     cursor: pointer;
-    transition: transform 0.2s;
-}
-.submit-order-btn:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-}
-.submit-order-btn:active {
-    transform: scale(0.98);
 }
 
-/* Spacer for fixed footer */
-.footer-spacer { height: 200px; }
+.checkout-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}

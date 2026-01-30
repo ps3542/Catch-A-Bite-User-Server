@@ -110,6 +110,26 @@ export const appUserReviewService = {
       console.error(separator);
       throw error;
     }
+  },
+
+  // ==========================================================
+  // 5. 가게별 리뷰 목록 조회 (GET)
+  // ==========================================================
+  getStoreReviews: async (storeId, page = 0, size = 10) => {
+    const separator = "======================================================================";
+    if (!storeId) throw new Error("Store ID is required");
+
+    try {
+      const response = await axiosInstance.get(`/api/v1/appuser/reviews/store/${storeId}`, {
+        params: { page, size }
+      });
+      return response.data;
+    } catch (error) {
+      console.error(separator);
+      console.error("Review List Fetch Error:", error);
+      console.error(separator);
+      throw error;
+    }
   }
 }
 

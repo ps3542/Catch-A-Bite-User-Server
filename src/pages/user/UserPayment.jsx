@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react'; // [필수] useRef 포함 확인
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import axiosInstance from '../../api/axios';
+import Modal from '../../components/common/Modal';
 import { appUserStoreOrderService } from '../../api/appuser/StoreOrderService';
 import './UserPayment.css';
 
@@ -19,18 +20,50 @@ const UserPayment = () => {
     const [loadingText, setLoadingText] = useState('Loading...');
     const [result, setResult] = useState(null);
 
+    // Modal State
+    const [modalConfig, setModalConfig] = useState({
+        isOpen: false,
+        title: '',
+        message: '',
+        onConfirm: null
+    });
+
+    // 상태 추적용 Refs (페이지 이탈 시 로직 제어용)
+    const isPaymentSuccess = useRef(false);   // 결제 성공 여부
+    const isMobileRedirect = useRef(false);   // 모바일 결제 리다이렉트 중인지 여부
+    const activeOrderId = useRef(null);       // 현재 활성 주문 ID (Clean-up에서 접근용)
+
     /*
     ========================================================================================
-    [1. 초기화 및 설정 로드]
-    - PortOne SDK 로드
-    - 백엔드 결제 설정(Store ID, Channel Key) 로드
+    [1. 초기화 및 Clean-up (주문 자동 삭제 로직)]
     ========================================================================================
     */
     useEffect(() => {
         loadPortOneSDK();
         loadConfig();
         checkUrlParams();
+
+        // [Clean-up] 컴포넌트가 화면에서 사라질 때(페이지 이탈) 실행되는 함수
+        return () => {
+            const id = activeOrderId.current;
+            
+            // 1. 주문 ID가 있고
+            // 2. 결제가 성공하지 않았으며
+            // 3. 모바일 결제창으로 이동하는 상황이 아니라면 -> 주문 삭제
+            if (id && !isPaymentSuccess.current && !isMobileRedirect.current) {
+                console.log(`[Clean-up] Navigating away without payment. Deleting Order ID: ${id}`);
+                // 비동기 호출 (결과를 기다리지 않음)
+                appUserStoreOrderService.cancelOrder(id).catch(err => {
+                    console.error("[Clean-up] Failed to delete incomplete order:", err);
+                });
+            }
+        };
     }, []);
+
+    // orderId 상태가 변경될 때마다 ref 업데이트 (Clean-up 함수에서 최신값 참조 위함)
+    useEffect(() => {
+        activeOrderId.current = orderId;
+    }, [orderId]);
 
     const loadPortOneSDK = () => {
         if (!window.PortOne) {
@@ -46,10 +79,6 @@ const UserPayment = () => {
         try {
             console.log("=== [Config] Fetching PortOne Config... ===");
             const response = await axiosInstance.get('/api/v1/config/portone');
-            
-            console.log("=== [Config] Response ===", response);
-            console.log("=== [Config] Data ===", response.data);
-
             const config = response.data.data || response.data;
             setPortOneConfig({
                 storeId: config.storeId || config['store-id'],
@@ -64,7 +93,6 @@ const UserPayment = () => {
     /*
     ========================================================================================
     [2. URL 파라미터 처리]
-    - 일반 진입 및 모바일 리다이렉트 복귀 처리
     ========================================================================================
     */
     const checkUrlParams = async () => {
@@ -74,16 +102,8 @@ const UserPayment = () => {
         const code = searchParams.get('code');
         const message = searchParams.get('message');
 
-        console.log("=== https://www.merriam-webster.com/dictionary/check Params Detected ===", { 
-            orderId: orderIdParam, 
-            paymentId, 
-            merchantUid, 
-            code, 
-            message 
-        });
-
         if (paymentId && merchantUid) {
-            // 모바일 결제 복귀 시나리오
+            // 모바일 결제 복귀
             const originalOrderId = merchantUid.split('_')[1];
             if (originalOrderId) {
                 setOrderId(originalOrderId);
@@ -91,14 +111,15 @@ const UserPayment = () => {
             }
 
             if (code != null) {
-                console.log("=== https://www.merriam-webster.com/dictionary/check Mobile Payment Failed ===");
-                showResult('error', `결제 실패: ${message} (Code: ${code})`, null, originalOrderId);
+                // --------------------------------------------------------------------------------------
+                // 모바일 결제 실패 시 리턴된 경우
+                // 상태값(orderId)이 아직 업데이트되지 않았을 수 있으므로 originalOrderId를 직접 전달하여
+                // showResult 내부에서 해당 주문을 삭제할 수 있도록 함
+                // --------------------------------------------------------------------------------------
             } else {
-                console.log("=== https://www.merriam-webster.com/dictionary/check Mobile Payment Success -> Verifying ===");
-                await completePayment(paymentId, merchantUid);
+                await completePayment(paymentId, merchantUid, originalOrderId);
             }
         } else if (orderIdParam) {
-            // 초기 진입 시나리오
             setOrderId(orderIdParam);
             fetchOrderData(orderIdParam);
         }
@@ -111,11 +132,7 @@ const UserPayment = () => {
         if (shouldResetResult) setResult(null);
 
         try {
-            console.log(`=== [Fetch Order] Fetching Order ID: ${id}... ===`);
-            // StoreOrderService 사용
             const orderData = await appUserStoreOrderService.getOrderDetails(id);
-            
-            console.log("=== [Fetch Order] Data ===", orderData);
             setCurrentOrder(orderData);
 
             if (orderData.appUserId) {
@@ -132,29 +149,20 @@ const UserPayment = () => {
 
     const fetchUserData = async (userId) => {
         try {
-            console.log(`=== [Fetch User] Fetching User ID: ${userId}... ===`);
             const response = await axiosInstance.get(`/api/v1/appuser/${userId}`);
-            console.log("=== [Fetch User] Response ===", response);
             setCurrentUser(response.data.data || response.data);
         } catch (error) {
             console.error("User fetch error:", error);
         }
     };
 
-    /*
-    ========================================================================================
-    [3. 주문 상태 변경 헬퍼]
-    ========================================================================================
-    */
     const updateOrderStatus = async (targetId, status) => {
         if (!targetId) return;
         try {
             console.log(`=== [Update Status] Request: Order ${targetId} -> ${status} ===`);
-            const response = await axiosInstance.put(`/api/v1/appuser/store-orders/${targetId}`, {
+            await axiosInstance.put(`/api/v1/appuser/store-orders/${targetId}`, {
                 orderStatus: status
             });
-            console.log(`=== [Update Status] Response ==-`, response);
-            console.log(`=== [Update Status] Updated Data ==-`, response.data);
         } catch (error) {
             console.error(`Failed to update order status to ${status}:`, error);
         }
@@ -162,16 +170,21 @@ const UserPayment = () => {
 
     /*
     ========================================================================================
-    [4. 결제 요청 (Request Payment)]
+    [3. 결제 요청 (Request Payment)]
     ========================================================================================
     */
     const requestPayment = async () => {
         if (!currentOrder || !portOneConfig.storeId) {
-            alert("주문 정보나 결제 설정이 올바르지 않습니다.");
+            openModal('알림', '주문 정보나 결제 설정이 올바르지 않습니다.');
             return;
         }
 
-        console.log("=== [Payment Request] Start ===");
+        // [모바일 체크] 리다이렉트 발생 여부 확인
+        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        if (isMobile) {
+            // 모바일이면 리다이렉트가 발생하므로, Clean-up에서 삭제하지 않도록 플래그 설정
+            isMobileRedirect.current = true;
+        }
 
         const buyerName = currentUser?.appUserName || currentOrder.userName || "구매자";
         const buyerPhone = currentUser?.appUserMobile || currentOrder.userPhone || "010-0000-0000";
@@ -181,10 +194,8 @@ const UserPayment = () => {
         setLoadingText("결제 준비 중...");
 
         try {
-            // [STEP 1] 결제 시작 상태로 변경
             await updateOrderStatus(currentOrder.orderId, 'PAYMENTINPROGRESS');
 
-            // [STEP 2] 결제 사전 준비 (API 호출)
             const prepareData = {
                 order_id: currentOrder.orderId,
                 payment_amount: Number(currentOrder.orderTotalPrice),
@@ -196,18 +207,10 @@ const UserPayment = () => {
                 name: `CatchABite 주문 #${currentOrder.orderId}`
             };
 
-            console.log("=== [Payment Request] Prepare Data (Payload) ===", prepareData);
-            
             const prepareResponse = await axiosInstance.post('/api/payments/prepare', prepareData);
-            
-            console.log("=== [Payment Request] Prepare Response ===", prepareResponse);
-            
             const preparedData = prepareResponse.data; 
             const merchantUid = preparedData.merchant_uid;
 
-            console.log("=== [Payment Request] Generated Merchant UID ===", merchantUid);
-
-            // [STEP 3] PortOne SDK 호출
             const paymentId = `PAY-${currentOrder.orderId}-${Date.now()}`;
             const redirectUrl = new URL(window.location.href);
             redirectUrl.searchParams.set('merchant_uid', merchantUid);
@@ -216,8 +219,6 @@ const UserPayment = () => {
                 throw new Error("PortOne SDK not loaded");
             }
 
-            console.log("=== [Payment Request] Calling window.PortOne.requestPayment ===");
-            
             const response = await window.PortOne.requestPayment({
                 storeId: portOneConfig.storeId,
                 channelKey: portOneConfig.channelKey,
@@ -238,21 +239,19 @@ const UserPayment = () => {
                 }
             });
 
-            console.log("=== [Payment Request] PortOne SDK Response ===", response);
-
-            // [STEP 4] PC 결제 결과 처리
+            // PC 결제 완료/취소 시 (모바일은 리다이렉트 되므로 여기 도달 안 함)
             if (response.code != null) {
-                // 결제 실패
-                console.log("=== [Payment Request] SDK Returned Error Code ===", response.code);
+                // PC에서 결제창 닫거나 실패함 -> 리다이렉트 플래그 해제
+                isMobileRedirect.current = false;
                 showResult('error', `결제 실패: ${response.message} (Code: ${response.code})`);
             } else {
-                // 결제 성공 (검증 진행)
-                console.log("=== [Payment Request] SDK Success -> Proceeding to Complete ===");
                 await completePayment(response.paymentId, merchantUid);
             }
 
         } catch (error) {
             console.error("Payment Process Error:", error);
+            // 에러 발생 시 리다이렉트 안 함 -> 플래그 원복
+            isMobileRedirect.current = false;
             showResult('error', `결제 중 오류 발생: ${error.response?.data?.message || error.message}`);
             setLoading(false);
         }
@@ -260,46 +259,61 @@ const UserPayment = () => {
 
     /*
     ========================================================================================
-    [5. 결제 검증 및 완료 (Complete Payment)]
+    [4. 결제 검증 및 완료 (Complete Payment)]
     ========================================================================================
     */
-    const completePayment = async (paymentId, merchantUid) => {
+    const completePayment = async (paymentId, merchantUid, orderIdFromUrl = null) => {
         setLoading(true);
-        setLoadingText("결제 검증 및 완료 처리 중...");
-
-        console.log("=== [Payment Complete] Request Params ===", { paymentId, merchantUid });
+        setLoadingText("결제 확인 중...");
 
         try {
-            // [STEP 1] 백엔드 검증 요청
             const response = await axiosInstance.post(`/api/payments/complete`, null, {
                 params: { paymentId, merchantUid }
             });
 
-            console.log("=== [Payment Complete] Backend Response ===", response);
-            console.log("=== [Payment Complete] Final Data ===", response.data);
+            // [중요] 결제 성공 플래그 설정 (페이지 이동 시 삭제 방지)
+            isPaymentSuccess.current = true;
 
-            // [STEP 2] 성공 시 주문 상태 확정
-            const targetOrderId = response.data.orderId || currentOrder?.orderId;
-            if (targetOrderId) {
-                await updateOrderStatus(targetOrderId, 'PAYMENTCONFIRMED');
-            }
-
-            // [STEP 3] 성공 결과 표시
-            showResult('success', "결제가 성공적으로 완료되었습니다!", response.data);
+            // ID 찾기 로직 강화
+            // 1. 응답 DTO에 있다면 최우선 (response.data.data.orderId - ApiResponse 구조 고려)
+            // 2. 응답이 Entity라면 (response.data.data.storeOrder.orderId)
+            // 3. URL에서 파싱한 값 (orderIdFromUrl)
+            // 4. 현재 State (currentOrder.orderId)
+            const responseData = response.data.data || response.data;
+            const targetOrderId = responseData?.orderId 
+                               || responseData?.storeOrder?.orderId 
+                               || orderIdFromUrl 
+                               || currentOrder?.orderId;
+            // console.log("========================================");
+            // console.log("CompletePayment");
+            // console.log("ResponseData");
+            // console.log(responseData);
+            // console.log("ResponseData.data");
+            // console.log(responseData.data);
+            // console.log("targetOrderId");
+            // console.log(targetOrderId);
+            // console.log("========================================");
             
-            setTimeout(() => {
-                console.log("=== [Payment Complete] Redirecting to Order History... ===");
-                window.location.replace(`/user/`);
-            }, 2000); 
+            showResult('success', "결제가 성공적으로 완료되었습니다!", targetOrderId);
+            
+            if (targetOrderId) {
+                sessionStorage.setItem('orderId', targetOrderId);
+                
+                setTimeout(() => {
+                    // /user/currentOrder/:orderId 로 이동
+                    window.location.replace(`/user/currentOrder/${targetOrderId}`);
+                }, 2000);
+            } else {
+                // 예외적으로 경우 메인으로
+                setTimeout(() => {
+                    window.location.replace('/user/');
+                }, 2000);
+            }
 
         } catch (error) {
             console.error("Verification Failed:", error);
             const errMsg = error.response?.data?.message || "서버 통신 중 오류가 발생했습니다.";
-            const errData = error.response?.data;
-            
-            console.log("=== [Payment Complete] Error Response Data ===", errData);
-            
-            showResult('error', `검증 실패: ${errMsg}`, errData);
+            showResult('error', `검증 실패: ${errMsg}`, error.response?.data);
         } finally {
             setLoading(false);
         }
@@ -307,14 +321,10 @@ const UserPayment = () => {
 
     /*
     ========================================================================================
-    [6. 결과 처리 및 실패 시 삭제 로직 (Show Result)]
+    [6. 결과 처리 (Show Result)]
     ========================================================================================
     */
     const showResult = async (type, message, data = null, targetOrderId = null) => {
-        console.log(`=== [Show Result] Type: ${type} ===`);
-        console.log(`=== [Show Result] Message: ${message} ===`);
-        console.log(`=== [Show Result] Data:`, data);
-        
         setResult({ type, message, data });
 
         if (type === 'error') {
@@ -325,25 +335,34 @@ const UserPayment = () => {
                     setLoadingText("결제 실패로 주문을 취소하는 중...");
                     setLoading(true);
 
-                    // 1. 상태 REJECTED 변경
                     await updateOrderStatus(idToDelete, 'REJECTED');
-
-                    // 2. 서비스 모듈을 통한 주문 삭제
-                    console.log(`=== [Delete Order] Deleting Order ID: ${idToDelete}... ===`);
-                    
-                    const deleteResult = await appUserStoreOrderService.cancelOrder(idToDelete);
-                    
-                    console.log(`=== [Delete Order] Success Response ===`, deleteResult);
+                    await appUserStoreOrderService.cancelOrder(idToDelete);
+                    console.log(`=== [Delete Order] Success ===`);
                     
                 } catch (deleteError) {
                     console.error("=== [Delete Order] Failed ===", deleteError);
                 } finally {
                     setLoading(false);
+                    openModal('결제 취소', '결제가 실패(취소)되어 메인 화면으로 돌아갑니다.', () => {
+                        window.location.replace('/user/');
+                    });
                 }
             } else {
-                console.warn("=== [Delete Order] Cannot delete: No Order ID available ===");
+                openModal('오류', '결제 오류가 발생하여 메인 화면으로 돌아갑니다.', () => {
+                    window.location.replace('/user/');
+                });
             }
         }
+    };
+
+    const openModal = (title, message, onConfirm = null) => {
+        setModalConfig({ isOpen: true, title, message, onConfirm });
+    };
+
+    const closeModal = () => {
+        const { onConfirm } = modalConfig;
+        setModalConfig({ ...modalConfig, isOpen: false });
+        if (onConfirm) onConfirm();
     };
 
     const handleReset = () => {
@@ -360,16 +379,15 @@ const UserPayment = () => {
     return (
         <div className="payment-page-body">
             <div className="payment-container">
-                <h1>🛒 CatchABite</h1>
+                <h1>CatchABite</h1>
                 <p className="payment-subtitle">PortOne V2 안전 결제</p>
 
                 <div className="info-box">
                     <strong>테스트 정보:</strong><br />
-                    Store ID 및 Channel Key는 서버 설정에서 자동으로 로드됩니다.
+                    테스트 전용을 사용하고 있어서 Naver로 결제하면 23시에 결제가 취소됩니다.
                 </div>
 
-                {/* Input Section */}
-                <div className="form-group">
+                {/* <div className="form-group">
                     <label>주문 ID (Order ID)</label>
                     <input 
                         type="number" 
@@ -379,9 +397,8 @@ const UserPayment = () => {
                         placeholder="주문 ID를 입력하세요"
                         readOnly={loading || (currentOrder && result?.type === 'success')}
                     />
-                </div>
+                </div> */}
 
-                {/* Order Details Section */}
                 {currentOrder && (
                     <div className="order-section">
                         <h3>주문 상세</h3>
@@ -405,25 +422,23 @@ const UserPayment = () => {
                     </div>
                 )}
 
-                {/* Action Buttons */}
                 <div className="button-group">
-                    <button 
+                    {/* <button 
                         className="payment-btn btn-secondary" 
                         onClick={handleReset}
                         disabled={loading}
                     >
                         초기화
-                    </button>
+                    </button> */}
                     <button 
                         className="payment-btn btn-primary" 
                         onClick={requestPayment} 
                         disabled={!currentOrder || loading || (result?.type === 'success')}
                     >
-                        {loading ? '처리 중...' : '결제하기 (V2)'}
+                        {loading ? '처리 중...' : '결제하기'}
                     </button>
                 </div>
 
-                {/* Loading Spinner */}
                 {loading && (
                     <div className="loading-container">
                         <div className="spinner"></div>
@@ -431,7 +446,6 @@ const UserPayment = () => {
                     </div>
                 )}
 
-                {/* Result Display */}
                 {result && (
                     <div className={`result-box ${result.type}`}>
                         <h3>{result.type === 'success' ? '성공' : '오류'}</h3>
@@ -441,6 +455,32 @@ const UserPayment = () => {
                         )}
                     </div>
                 )}
+                {/* [변경] 내부 구현 모달 제거 -> 공통 Modal 컴포넌트 사용 
+                  footer prop을 사용하여 확인 버튼 커스터마이징
+                */}
+                <Modal
+                    isOpen={modalConfig.isOpen}
+                    onClose={closeModal}
+                    title={modalConfig.title}
+                    footer={
+                        <button 
+                            onClick={closeModal}
+                            style={{
+                                padding: '8px 16px',
+                                border: 'none',
+                                borderRadius: '6px',
+                                background: '#21808d',
+                                color: '#fff',
+                                fontWeight: 'bold',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            확인
+                        </button>
+                    }
+                >
+                    {modalConfig.message}
+                </Modal>
             </div>
         </div>
     );

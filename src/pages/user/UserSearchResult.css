@@ -1,100 +1,146 @@
-/* Container for the whole page */
+/* Project Name: CatchaBite */
+/* File Name: src/pages/user/UserSearchResult.css */
+
+/* ========================================================================================
+   [1. 페이지 레이아웃]
+   전체 페이지의 배경색과 스크롤 영역을 정의합니다.
+   ======================================================================================== */
 .search-result-page {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #f9fafb; /* gray-50 */
-  padding-bottom: 5rem; /* pb-20 */
+  background-color: #ffffff; /* 리스트 뷰를 위해 배경을 흰색으로 변경 */
+  padding-bottom: 5rem;      /* 하단 탭바 영역 확보 */
 }
 
-/* Main content scroll area */
+/* 메인 컨텐츠 영역 (스크롤 가능) */
 .search-content {
   flex: 1;
   overflow-y: auto;
 }
 
-/* --- History Section --- */
+/* ========================================================================================
+   [2. 최근 검색어 섹션 (History Section)]
+   기존 태그 스타일에서 모바일 앱 표준 리스트 스타일로 변경됨
+   ======================================================================================== */
 .history-section {
-  padding: 1.5rem 1rem; /* px-4 py-6 */
+  padding: 0; /* 리스트 아이템이 화면 꽉 차게 보이도록 패딩 제거 */
+}
+
+/* 헤더: 제목과 전체 삭제 버튼 */
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  /* background-color: #f9fafb; 헤더 배경색 옵션 */
 }
 
 .section-title {
-  font-size: 0.875rem; /* text-sm */
+  font-size: 0.95rem;
   font-weight: 700;
-  color: #374151; /* gray-700 */
-  margin-bottom: 0.75rem;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
+  color: #1f2937;
+  margin: 0;
 }
 
-.title-sub {
-  color: #9ca3af; /* gray-400 */
-  font-weight: 400;
-  font-size: 0.75rem; /* text-xs */
+.clear-all-btn {
+  font-size: 0.8rem;
+  color: #6b7280;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* 기록 없음 상태 */
+.no-history-container {
+  padding: 3rem 1rem;
+  text-align: center;
 }
 
 .no-history-msg {
   color: #9ca3af;
-  font-size: 0.875rem;
-  padding: 1rem 0;
-  text-align: center;
+  font-size: 0.9rem;
 }
 
-.history-tags {
+/* 검색어 리스트 스타일 (List View) */
+.history-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.history-item {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.history-tag {
-  display: inline-flex;
   align-items: center;
-  background-color: white;
-  border: 1px solid #e5e7eb; /* gray-200 */
-  color: #4b5563; /* gray-600 */
-  padding: 0.375rem 0.75rem;
-  border-radius: 9999px; /* full rounded */
-  font-size: 0.875rem;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #f3f4f6; /* 항목 간 구분선 */
   cursor: pointer;
-  transition: background-color 0.2s;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: background-color 0.1s;
 }
 
-.history-tag:active {
-  background-color: #f3f4f6; /* gray-100 */
+.history-item:active {
+  background-color: #f9fafb; /* 터치 시 피드백 */
 }
 
-.delete-tag-btn {
-  margin-left: 0.5rem;
-  color: #9ca3af; /* gray-400 */
-  padding: 0.125rem;
+/* 리스트 아이템 좌측 (아이콘 + 텍스트) */
+.history-item-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  overflow: hidden; /* 긴 텍스트 말줄임 처리용 */
+}
+
+.history-icon {
+  color: #9ca3af; /* 회색 시계 아이콘 */
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.history-text {
+  font-size: 0.95rem;
+  color: #374151;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* 긴 검색어는 ... 처리 */
+}
+
+/* 개별 삭제 버튼 (X 아이콘) */
+.delete-history-btn {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  margin-right: -0.5rem; /* 터치 영역 확보를 위해 마진 조정 */
+  color: #d1d5db; /* 연한 회색 */
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: none;
-  border: none;
-  cursor: pointer;
+  font-size: 1.1rem;
 }
 
-.delete-tag-btn:hover {
-  color: #ef4444; /* red-500 */
+.delete-history-btn:hover {
+  color: #9ca3af; /* 호버 시 진한 회색 */
 }
 
-/* --- Loading State --- */
+/* ========================================================================================
+   [3. 로딩 상태 (Loading State)]
+   ======================================================================================== */
 .loading-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding-top: 8rem;
-  color: #6b7280; /* gray-500 */
+  color: #6b7280;
 }
 
 .spinner {
   width: 2.5rem;
   height: 2.5rem;
-  border: 4px solid #22c55e; /* green-500 */
+  border: 4px solid #22c55e;
   border-top-color: transparent;
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -110,7 +156,9 @@
   to { transform: rotate(360deg); }
 }
 
-/* --- Empty / Error State --- */
+/* ========================================================================================
+   [4. 결과 없음 및 에러 상태 (Empty / Error State)]
+   ======================================================================================== */
 .empty-container {
   display: flex;
   flex-direction: column;
@@ -131,7 +179,7 @@
 .empty-icon-wrapper {
   width: 5rem;
   height: 5rem;
-  background-color: #f3f4f6; /* gray-100 */
+  background-color: #f3f4f6;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -140,13 +188,13 @@
 }
 
 .empty-icon {
-  color: #9ca3af; /* gray-400 */
+  color: #9ca3af;
 }
 
 .empty-title {
-  font-size: 1.125rem; /* text-lg */
+  font-size: 1.125rem;
   font-weight: 700;
-  color: #1f2937; /* gray-800 */
+  color: #1f2937;
   margin-bottom: 0.25rem;
 }
 
@@ -156,7 +204,9 @@
   line-height: 1.5;
 }
 
-/* --- Results Section --- */
+/* ========================================================================================
+   [5. 검색 결과 섹션 (Results Section)]
+   ======================================================================================== */
 .results-section {
   padding: 1rem;
 }
@@ -170,20 +220,27 @@
 }
 
 .results-count-title {
-  font-size: 1.125rem; /* text-lg */
+  font-size: 1.125rem;
   font-weight: 700;
   color: #1f2937;
 }
 
-.count-number {
-  color: #16a34a; /* green-600 */
+.title-sub {
+  color: #9ca3af;
+  font-weight: 400;
+  font-size: 0.75rem;
   margin-left: 0.25rem;
 }
 
-/* Vertical list of cards (Full width as requested) */
+.count-number {
+  color: #16a34a;
+  margin-left: 0.25rem;
+}
+
+/* 카드 리스트 컨테이너 (세로 정렬) */
 .results-list {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem; /* Space between cards */
+  gap: 1.5rem;
   width: 100%;
 }

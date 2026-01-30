@@ -1,281 +1,233 @@
-/* Layout & Typography */
-.cart-page-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  color: #333;
-}
+/* ======================================================================
+ * 파일명: UserCart.css
+ * 목적: 장바구니 페이지(UserCart.jsx)의 모든 UI 스타일을 정의합니다.
+ * 주요 수정: 하단 푸터 가림 현상 방지를 위해 컨테이너 하단 여백(200px) 추가.
+ * 정렬 기준: JSX 내 등장 순서 (로딩 -> 빈 상태 -> 장바구니 상세)
+ * ====================================================================== */
 
-.cart-page-title {
-  font-size: 1.75rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-  color: #111;
-}
-
-/* Loading & Empty States */
+/* 1. 로딩 상태 (cart-loading) */
 .cart-loading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 60vh;
-  font-size: 1.1rem;
-  color: #666;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 1.1rem;
+    color: #666;
 }
 
+/* 2. 장바구니가 비어있는 상태 (cart-empty-...) */
 .cart-empty-container {
-  max-width: 600px;
-  margin: 3rem auto;
-  text-align: center;
-  padding: 3rem;
-  background-color: #fff;
-  border: 1px solid #eee;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    text-align: center;
 }
 
 .cart-empty-icon {
-  font-size: 4rem;
-  margin-bottom: 1rem;
+    font-size: 4rem;
+    margin-bottom: 20px;
 }
 
 .cart-empty-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  color: #333;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 10px;
 }
 
 .cart-empty-desc {
-  color: #888;
-  margin-bottom: 2rem;
+    color: #888;
+    margin-bottom: 30px;
 }
 
 .cart-empty-btn {
-  background-color: #ff6b00;
-  color: #fff;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 50px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s;
+    padding: 12px 24px;
+    background-color: #ff6b00;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
 }
 
-.cart-empty-btn:hover {
-  background-color: #e65c00;
+/* 3. 장바구니 메인 컨테이너 */
+/* ----------------------------------------------------------------------
+ * [중요] 하단 여백 처리
+ * 배달 주문하기 버튼이 푸터 등에 의해 가려지지 않도록 
+ * 컨테이너 하단에 최소 200px의 여백을 확보합니다.
+ * ---------------------------------------------------------------------- */
+.cart-page-container {
+    padding: 20px;
+    background-color: #fff;
+    min-height: 100vh;
+    padding-bottom: 200px; 
 }
 
-/* Store Header */
+.cart-page-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: #333;
+}
+
+/* 4. 매장 정보 헤더 (cart-store-header) */
 .cart-store-header {
-  background-color: #fff;
-  padding: 1.25rem;
-  border: 1px solid #eee;
-  border-bottom: none;
-  border-radius: 12px 12px 0 0;
-  justify-content: space-between;
-  align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .cart-store-name {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #333;
-  margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 5px;
 }
 
 .cart-min-order {
-  font-size: 0.9rem;
-  color: #666;
+    font-size: 0.9rem;
+    color: #888;
 }
 
-/* Cart Items */
+/* 5. 아이템 리스트 및 개별 아이템 (cart-item) */
 .cart-items-list {
-  background-color: #fff;
-  border: 1px solid #eee;
-  border-radius: 0 0 12px 12px;
-  overflow: hidden;
-  margin-bottom: 1.5rem;
+    margin-bottom: 30px;
 }
 
 .cart-item {
-  display: flex;
-  align-items: center;
-  padding: 1.25rem;
-  border-bottom: 1px solid #f5f5f5;
-}
-
-.cart-item:last-child {
-  border-bottom: none;
-}
-
-.cart-no-img {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  color: #aaa;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px 0;
+    border-bottom: 1px solid #f9f9f9;
 }
 
 .cart-item-info {
-  flex-grow: 1;
+    flex: 1;
 }
 
 .cart-item-name {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin: 0 0 0.25rem 0;
-  color: #333;
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 8px;
 }
 
 .cart-item-options-list {
-  display: flex;
-  flex-direction: column;
-  margin-top: 4px;
-  margin-bottom: 4px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 8px;
 }
 
 .cart-option-text {
-  font-size: 13px;      
-  color: #888888;   
-  line-height: 1.4;
-  font-weight: 400;
+    font-size: 0.85rem;
+    color: #777;
+    margin-bottom: 2px;
 }
 
 .cart-item-price {
-  font-size: 0.95rem;
-  color: #888;
-  margin: 0;
+    font-weight: 500;
+    color: #333;
 }
 
-/* Quantity Controls */
+/* 6. 수량 조절부 (cart-qty-control) */
 .cart-qty-control {
-  display: flex;
-  align-items: center;
-  margin: 0 1.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: 0 15px;
 }
 
 .cart-qty-btn {
-  width: 32px;
-  height: 32px;
-  background-color: #fff;
-  border: none;
-  cursor: pointer;
-  font-size: 1.2rem;
-  line-height: 1;
-  color: #555;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.cart-qty-btn:hover {
-  background-color: #f5f5f5;
+    width: 30px;
+    height: 30px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
 }
 
 .cart-qty-val {
-  width: 36px;
-  text-align: center;
-  font-weight: 600;
-  font-size: 0.95rem;
+    padding: 0 10px;
+    font-weight: 600;
 }
 
-/* Item Total & Delete */
+/* 7. 아이템 합계 및 삭제 (cart-item-total) */
 .cart-item-total {
-  text-align: right;
-  min-width: 80px;
+    text-align: right;
+    min-width: 80px;
 }
 
 .cart-total-price {
-  font-weight: 700;
-  color: #333;
-  margin-bottom: 0.25rem;
-  font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 10px;
 }
 
 .cart-delete-btn {
-  background: none;
-  border: none;
-  color: #ff4d4f;
-  font-size: 0.85rem;
-  cursor: pointer;
-  text-decoration: underline;
-  padding: 0;
+    background: none;
+    border: 1px solid #eee;
+    color: #999;
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
-.cart-delete-btn:hover {
-  color: #d9363e;
-}
-
-/* Bill Summary */
+/* 8. 결제 요약 섹션 (cart-bill-summary) */
 .cart-bill-summary {
-  background-color: #fff;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  margin-bottom: 2rem;
-  border: 1px solid #eee;
+    background-color: #f8f8f8;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 30px;
 }
 
 .cart-bill-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.75rem;
-  font-size: 1rem;
-  color: #555;
-}
-
-.cart-bill-val {
-  font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    color: #555;
 }
 
 .cart-divider {
-  border-bottom: 1px solid #eee;
-  padding-bottom: 1rem;
-  margin-bottom: 1rem;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.cart-bill-val {
+    font-weight: 500;
 }
 
 .cart-bill-total-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #111;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    font-weight: 700;
+    font-size: 1.1rem;
 }
 
 .cart-final-price {
-  color: #ff6b00;
+    color: #ff6b00;
+    font-size: 1.3rem;
 }
 
-/* Action Buttons */
+/* 9. 하단 주문 버튼 (cart-order-btn) */
 .cart-order-btn {
-  width: 100%;
-  padding: 1rem;
-  background-color: #ff6b00;
-  color: white;
-  font-size: 1.1rem;
-  font-weight: 700;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: 0 4px 12px rgba(255, 107, 0, 0.2);
-}
-
-.cart-order-btn:hover {
-  background-color: #e65c00;
-  transform: translateY(-1px);
+    width: 100%;
+    padding: 16px;
+    background-color: #ff6b00;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
 .cart-order-btn.disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-  box-shadow: none;
-  transform: none;
+    background-color: #ccc;
+    cursor: not-allowed;
 }

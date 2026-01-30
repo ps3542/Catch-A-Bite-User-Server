@@ -104,7 +104,6 @@ export default function UserMainPage() {
           const detailsPromises = favData.map(async (fav) => {
             try {
               const detail = await appUserStoreService.getStoreDetails(fav.storeId);
-              // Merge the favoriteId (from the list) with the details (from the store API)
               return { ...detail, favoriteId: fav.favoriteId };
             } catch (e) {
               console.error(`Failed to load store ${fav.storeId}`, e);
