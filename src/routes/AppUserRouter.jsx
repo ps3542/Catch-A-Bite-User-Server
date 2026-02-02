@@ -12,6 +12,9 @@ import UserOrderHistory from"../pages/user/UserOrderHistory.jsx"; // 주문내�
 import UserFavoriteStores from "../pages/user/UserFavoriteStores.jsx";
 import UserPayment from "../pages/user/UserPayment.jsx";
 import UserCurrentOrder from "../pages/user/UserCurrentOrder.jsx";// 주문 메뉴 정보
+import UserProfileEdit from "../pages/user/UserProfileEdit.jsx"; //개인정보 수정
+import UserAddressEdit from "../pages/user/UserAddressEdit.jsx"; //주소관리
+
 
 // 사용자 기초 Layout
 import AppUserBasicLayout from "../layout/appuser/BasicLayout.jsx";
@@ -37,9 +40,11 @@ export default function AppUserRouter() {
                 <Route path="currentOrder/:orderId" element={<UserCurrentOrder />} />
                 <Route path="review/:orderId" element={<UserReview />} />
 
-                {/* 
+                
                 <Route path="profile" element={<UserProfile />} />
-                */}
+                <Route path="edit-profile" element={<UserProfileEdit />} />
+                <Route path="address-edit" element={<UserAddressEdit />} />
+               
             </Route>
             
         </Routes>

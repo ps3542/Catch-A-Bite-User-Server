@@ -25,16 +25,16 @@ const fallbackUser = { name: "사용자 찾기 실페"};
 const separator = "===================================";
 
 const storeCategory = [
-  { key: 'chicken', text: '치킨', color: '#FFEBEE' },
-  { key: 'korean', text: '한식', color: '#E8F5E9' },
-  { key: 'chinese', text: '중식', color: '#F3E5F5' },
-  { key: 'japanese', text: '일식', color: '#FFF3E0' },
-  { key: 'western', text: '양식', color: '#E3F2FD' },
-  { key: 'snack', text: '분식', color: '#E1F5FE' },
-  { key: 'pizza', text: '피자', color: '#FFF8E1' }, 
-  { key: 'cafe_dessert', text: '카페/디저트', color: '#FAFAFA' },
-  { key: 'late_night', text: '야식', color: '#E0F2F1' },
-  { key: 'etc', text: '기타', color: '#FCE4EC' }
+  { key: 'chicken', text: '치킨', image: 'https://loremflickr.com/320/240/friedchicken' },
+  { key: 'korean', text: '한식', image: 'https://loremflickr.com/320/240/bibimbap,koreanfood' },
+  { key: 'chinese', text: '중식', image: 'https://loremflickr.com/320/240/jajangmyeon,chinesefood' },
+  { key: 'japanese', text: '일식', image: 'https://loremflickr.com/320/240/sushi,japanesefood' },
+  { key: 'western', text: '양식', image: 'https://loremflickr.com/320/240/pasta,burger' },
+  { key: 'snack', text: '분식', image: 'https://loremflickr.com/320/240/tteokbokki,streetfood' },
+  { key: 'pizza', text: '피자', image: 'https://loremflickr.com/320/240/pizza' },
+  { key: 'cafe_dessert', text: '카페/디저트', image: 'https://loremflickr.com/320/240/cake,coffee' },
+  { key: 'late_night', text: '야식', image: 'https://loremflickr.com/320/240/porkbelly,barbecue' },
+  { key: 'etc', text: '기타', image: 'https://loremflickr.com/320/240/dining,buffet' }
 ];
 
 
@@ -152,16 +152,22 @@ export default function UserMainPage() {
                 className="storeCategory"
                 onClick={() => handleCategoryClick(category.key)}
                 style={{
-                  backgroundColor: category.color,
-                  height: '70px',
+                  // 배경 이미지와 어두운 오버레이(Gradient)를 함께 적용하여 텍스트 가독성 확보
+                  backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${category.image})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundColor: '#f0f0f0', // 이미지가 로드되지 않았을 때의 기본 색상
+                  height: '80px', // 이미지가 잘 보이도록 높이를 약간 조정 (70px -> 80px)
                   borderRadius: '12px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontSize: '14px',
-                  fontWeight: '600',
-                  color: '#333',
-                  cursor: 'pointer'
+                  fontWeight: '700',
+                  color: '#fff', // 배경이 어두우므로 글자색은 흰색
+                  textShadow: '0 1px 3px rgba(0,0,0,0.6)', // 텍스트 그림자 추가
+                  cursor: 'pointer',
+                  overflow: 'hidden'
                 }}
               >
                 {category.text}

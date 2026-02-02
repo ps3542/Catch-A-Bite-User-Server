@@ -1,0 +1,112 @@
+.address-container {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 24px 16px;
+  min-height: 100vh;
+  background: #f6f6f6;
+}
+
+.address-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+
+/* 주소 추가 */
+
+.address-add {
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  margin-bottom: 20px;
+
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.address-add input {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.address-add input:focus {
+  outline: none;
+  border-color: #6aa3f5;
+}
+
+.address-add button {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+
+  background: #6aa3f5;
+  color: white;
+
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.address-add button:hover {
+  background: #4d8df0;
+}
+
+
+/* 주소 리스트 */
+
+.address-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+
+.address-item {
+  background: white;
+  padding: 14px;
+  border-radius: 12px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+
+.address-name {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+
+.address-text {
+  font-size: 13px;
+  color: #555;
+}
+
+
+/* 삭제 버튼 */
+
+.delete-btn {
+  background: #ff5b5b;
+  border: none;
+  border-radius: 6px;
+
+  color: white;
+  padding: 6px 10px;
+
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background: #e64545;
+}

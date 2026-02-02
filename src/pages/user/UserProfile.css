@@ -1,0 +1,129 @@
+/* 전체 배경 */
+
+.profile-container {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 20px 16px 30px;
+
+  background: #f6f6f6;
+  min-height: 100vh;
+}
+
+
+/* =====================
+   프로필 카드
+===================== */
+
+.profile-card {
+  background: linear-gradient(135deg, #9fc5f8, #b7d4fa);
+
+  border-radius: 14px;
+  padding: 18px 16px;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  color: white;
+
+  margin-bottom: 22px;
+
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+
+.profile-avatar {
+  width: 54px;
+  height: 54px;
+
+  background: white;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 26px;
+  color: #6aa3f5;
+}
+
+
+.profile-nickname {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+
+/* =====================
+   메뉴 영역
+===================== */
+
+.profile-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+/* 메뉴 카드 */
+
+.profile-item {
+  background: white;
+
+  border-radius: 12px;
+
+  padding: 14px 16px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  cursor: pointer;
+
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+
+  transition: all 0.2s ease;
+}
+
+
+/* hover */
+
+.profile-item:hover {
+  background: #eef5ff;
+}
+
+
+/* 클릭 */
+
+.profile-item:active {
+  transform: scale(0.97);
+}
+
+
+/* 왼쪽 영역 */
+
+.menu-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  font-size: 15px;
+  font-weight: 500;
+  color: #222;
+}
+
+
+/* 아이콘 */
+
+.material-symbols-outlined {
+  font-size: 21px;
+  color: #7aaaf7;
+}
+
+
+/* 오른쪽 화살표 */
+
+.profile-item > .material-symbols-outlined {
+  color: #bbb;
+  font-size: 20px;
+}

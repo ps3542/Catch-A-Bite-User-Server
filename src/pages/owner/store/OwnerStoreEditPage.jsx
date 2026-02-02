@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import InlineMessage from "../../../components/InlineMessage.jsx";
 import { ownerStoreService } from "../../../api/owner/ownerStoreService.js";
 import { ownerStoreImageService } from "../../../api/owner/ownerStoreImageService.js";
+import KakaoAddressMap from "../../../components/KakaoAddressMap.jsx";
 import styles from "../../../styles/ownerStoreEdit.module.css";
 
 const pickData = (res) => res?.data?.data ?? res?.data ?? null;
@@ -385,12 +386,18 @@ const saveOriginLabel = async () => {
             )}
           </SectionCard>
 
-          {/* 주소 */}
-          <SectionCard title="주소" editing={editing.address} onEdit={() => toggleEdit("address")}>
+        <SectionCard title="주소" editing={editing.address} onEdit={() => toggleEdit("address")}>
             {!editing.address ? (
               <>
                 <div className={styles.readValue}>{store.storeAddress || "-"}</div>
-                <div className={styles.mapBox} aria-hidden="true" />
+
+                {/* 조회 모드에서도 지도는 항상 보여주기 */}
+                <div className={styles.mapBox}>
+                  <KakaoAddressMap
+                    address={store.storeAddress || ""}
+                    key={`store-${sid}-${store.storeAddress || ""}`}
+                  />
+                </div>
               </>
             ) : (
               <div className={styles.formRow}>
@@ -413,7 +420,14 @@ const saveOriginLabel = async () => {
                     취소
                   </button>
                 </div>
-                <div className={styles.hint}>지도는 피그마 형태만 유지(회색 박스)했습니다.</div>
+
+                {/*  수정 모드에서는 draft 기준으로 지도 표시 */}
+                <div className={styles.mapBox}>
+                  <KakaoAddressMap
+                    address={draft.storeAddress || ""}
+                    key={`draft-${sid}-${draft.storeAddress || ""}`}
+                  />
+                </div>
               </div>
             )}
           </SectionCard>
