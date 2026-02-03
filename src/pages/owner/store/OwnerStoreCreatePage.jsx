@@ -5,6 +5,9 @@ import { ownerStoreService } from "../../../api/owner/ownerStoreService.js";
 import { unwrap } from "../../../utils/apiResponse.js";
 import styles from "../../../styles/ownerForm.module.css";
 
+// 관리 페이지에서 쓰는 “동일 모달”
+import AddressSearchModal from "../../../components/owner/AddressSearchModal.jsx";
+
 export default function OwnerStoreCreatePage() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -14,8 +17,12 @@ export default function OwnerStoreCreatePage() {
     storeCategory: "",
     storeIntro: "",
   });
+
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+
+  // 주소 검색 모달 상태
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
 
   const storeCategories = [
     { value: "korean", label: "한식" },
@@ -31,7 +38,6 @@ export default function OwnerStoreCreatePage() {
   ];
 
   const onlyDigits = (v) => String(v ?? "").replace(/\D/g, "");
-
   const onChange = (k) => (e) => setForm((p) => ({ ...p, [k]: e.target.value }));
 
   const validate = () => {
@@ -42,7 +48,6 @@ export default function OwnerStoreCreatePage() {
     return null;
   };
 
-
   const onSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -51,6 +56,7 @@ export default function OwnerStoreCreatePage() {
       setError(msg);
       return;
     }
+
     setSaving(true);
     try {
       const res = await ownerStoreService.create(form);
@@ -68,6 +74,7 @@ export default function OwnerStoreCreatePage() {
   return (
     <div className={styles.wrap}>
       <h2 className={styles.title}>매장 등록</h2>
+
       <form className={styles.form} onSubmit={onSubmit}>
         <label className={styles.label}>
           매장명
@@ -81,17 +88,15 @@ export default function OwnerStoreCreatePage() {
             inputMode="numeric"
             placeholder="숫자만 입력"
             value={form.storePhone}
-            onChange={(e) => setForm((p) => ({ ...p, storePhone: onlyDigits(e.target.value).slice(0, 10) }))}
+            onChange={(e) =>
+              setForm((p) => ({ ...p, storePhone: onlyDigits(e.target.value).slice(0, 10) }))
+            }
           />
         </label>
 
         <label className={styles.label}>
           카테고리
-          <select
-            className={styles.select}
-            value={form.storeCategory}
-            onChange={onChange("storeCategory")}
-          >
+          <select className={styles.select} value={form.storeCategory} onChange={onChange("storeCategory")}>
             <option value="" disabled>
               카테고리를 선택해 주세요
             </option>
@@ -103,13 +108,25 @@ export default function OwnerStoreCreatePage() {
           </select>
         </label>
 
+        {/* 주소: 관리페이지와 동일하게 "readonly + 주소검색 버튼 + 동일 모달" */}
         <label className={styles.label}>
           주소
-          <input
-            className={styles.input}
-            value={form.storeAddress}
-            onChange={onChange("storeAddress")}
-          />
+          <div style={{ display: "flex", gap: 8, width: "100%" }}>
+            <input
+              className={styles.input}
+              value={form.storeAddress}
+              readOnly
+              placeholder="주소 검색을 눌러 선택해 주세요"
+            />
+            <button
+              type="button"
+              className={styles.outlineBtn}
+              onClick={() => setIsAddressModalOpen(true)}
+              style={{ whiteSpace: "nowrap" }}
+            >
+              주소 검색
+            </button>
+          </div>
         </label>
 
         <label className={styles.label}>
@@ -133,6 +150,14 @@ export default function OwnerStoreCreatePage() {
           </button>
         </div>
       </form>
+
+      {/* 관리 페이지와 동일 모달 */}
+      <AddressSearchModal
+        isOpen={isAddressModalOpen}
+        onClose={() => setIsAddressModalOpen(false)}
+        initialAddress={form.storeAddress || ""}
+        onConfirm={(addr) => setForm((p) => ({ ...p, storeAddress: addr }))}
+      />
     </div>
   );
 }

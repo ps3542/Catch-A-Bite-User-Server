@@ -25,37 +25,36 @@ const OwnerSidebar = () => {
         key: "ops",
         title: "운영",
         items: [
-          { to: "/owner", label: "대시보드" },
-          { to: storeSpecific("/orders"), label: "주문 관리" },
-          { to: storeSpecific("/reviews"), label: "리뷰 관리" },
+          { id: "ops-dashboard", to: "/owner", label: "대시보드" },
+          { id: "ops-orders", to: storeSpecific("/orders"), label: "주문 관리" },
+          { id: "ops-reviews", to: storeSpecific("/reviews"), label: "리뷰 관리" },
         ],
       },
       {
         key: "settlement",
         title: "정산",
         items: [
-          { to: storeSpecific("/payments"), label: "결제 내역" },
-          { to: storeSpecific("/transactions"), label: "정산 내역" },
+          { id: "settlement-payments", to: storeSpecific("/payments"), label: "결제 내역" },
+          { id: "settlement-transactions", to: storeSpecific("/transactions"), label: "정산 내역" },
         ],
       },
       {
         key: "store",
         title: "매장",
         items: [
-          { to: "/owner/stores", label: "매장 목록" },
-          { to: "/owner/stores/new", label: "매장 등록" },
-          { to: storeSpecific("/edit"), label: "매장 관리" },
-          { to: storeSpecific("/images"), label: "매장 이미지" },
+          { id: "store-list", to: "/owner/stores", label: "매장 목록" },
+          { id: "store-new", to: "/owner/stores/new", label: "매장 등록" },
+          { id: "store-edit", to: storeSpecific("/edit"), label: "매장 관리" },
+          { id: "store-images", to: storeSpecific("/images"), label: "매장 이미지" },
         ],
       },
       {
         key: "menu",
         title: "메뉴",
         items: [
-          { to: storeSpecific("/menus"), label: "메뉴 관리" },
-          { to: storeSpecific("/menus/categories"), label: "카테고리 관리" },
-          // 옵션 관리는 메뉴 선택이 필요하므로 store 기준 진입 후 페이지에서 메뉴를 선택
-          { to: storeSpecific("/menus/options"), label: "옵션 관리" },
+          { id: "menu-manage", to: storeSpecific("/menus"), label: "메뉴 관리" },
+          { id: "menu-categories", to: storeSpecific("/menus/categories"), label: "카테고리 관리" },
+          { id: "menu-options", to: storeSpecific("/menus/options"), label: "옵션 관리" },
         ],
       },
     ],
@@ -126,7 +125,7 @@ const OwnerSidebar = () => {
                 }`}
               >
                 {g.items.map((it) => (
-                  <NavLink key={it.to} to={it.to} className={linkClass}>
+                  <NavLink key={it.id} to={it.to} className={linkClass}>
                     <span className={styles.navLinkText}>{it.label}</span>
                   </NavLink>
                 ))}

@@ -25,16 +25,16 @@ const fallbackUser = { name: "사용자 찾기 실페"};
 const separator = "===================================";
 
 const storeCategory = [
-  { key: 'chicken', text: '치킨', image: 'https://loremflickr.com/320/240/friedchicken' },
-  { key: 'korean', text: '한식', image: 'https://loremflickr.com/320/240/bibimbap,koreanfood' },
-  { key: 'chinese', text: '중식', image: 'https://loremflickr.com/320/240/jajangmyeon,chinesefood' },
-  { key: 'japanese', text: '일식', image: 'https://loremflickr.com/320/240/sushi,japanesefood' },
-  { key: 'western', text: '양식', image: 'https://loremflickr.com/320/240/pasta,burger' },
-  { key: 'snack', text: '분식', image: 'https://loremflickr.com/320/240/tteokbokki,streetfood' },
-  { key: 'pizza', text: '피자', image: 'https://loremflickr.com/320/240/pizza' },
-  { key: 'cafe_dessert', text: '카페/디저트', image: 'https://loremflickr.com/320/240/cake,coffee' },
-  { key: 'late_night', text: '야식', image: 'https://loremflickr.com/320/240/porkbelly,barbecue' },
-  { key: 'etc', text: '기타', image: 'https://loremflickr.com/320/240/dining,buffet' }
+  { key: 'chicken', text: '치킨', image: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTEyMDNfMTE3%2FMDAxNzY0NzAzMTAyNTU4.n0BV5HyOdryoFC1t0dAK79HyEKOnrZJvFZGGnp__5X0g.PHF0ZKgr4-01DQla8M_riA6SXqinzQQ6t0SfurA6Miwg.JPEG%2F%25B4%25D9%25BF%25EE%25B7%25CE%25B5%25E5%25A3%25AD34.jpeg&type=sc960_832' },
+  { key: 'korean', text: '한식', image: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzA2MTZfNzQg%2FMDAxNjg2OTA4NTA2OTEy.iTI0YeANW3A8GEHyCEoT8YaYuinaLYxkRungZMhQ-M0g.NZQN9qcQLXto9Bg9EyEvqXG9gMSZU8iDNSloA8VVb4cg.JPEG.sbr93000%2Fimg_%25281%2529.jpg&type=sc960_832' },
+  { key: 'chinese', text: '중식', image: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTAyMTRfMjIw%2FMDAxNzM5NTA2OTc1NTk2.gIS00l8kTLkuxSat92Tw6msEW1SJIXumA5TKTh4C1nog.Kx0YAo8d0iOQlPBpzBPh7OxIH01995xSGLk2Qln4gncg.JPEG%2F6.jpg&type=sc960_832' },
+  { key: 'japanese', text: '일식', image: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTEwMTRfMjUx%2FMDAxNzYwNDMyNzMzODE2.M1xYlRmxgN9LJBr0ZucJEi4f5uC5DYhcadXLRyGTYg0g.MPajdj4VD1WMx8bb89iZoAVEdGi_sVPXVfOOwmsZl8gg.JPEG%2F900%25A3%25DF20251012%25A3%25DF122742.jpg&type=sc960_832' },
+  { key: 'western', text: '양식', image: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDEyMThfMTkz%2FMDAxNzM0NDk0NDM2MDg4.JqT8PrWXnr1xmS4OY0h3MDyND6tO3EZT11xjrWgRtwAg.25ZmuqEyZVX2hRTR99J5MZ37BXDtClry4gsfwg8rFzog.JPEG%2F900%25A3%25DF20241214%25A3%25DF123001.jpg&type=sc960_832' },
+  { key: 'snack', text: '분식', image: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTEwMTNfNDkg%2FMDAxNzYwMzM5MTU1ODc3.9e8gOLQOkTIddqiIlvtP2YeWSv6NjqnlsfwnyMvWJ0kg.JRMB0SX3oT90fvLM_uM3O7J1GnDndqYnydlrY18dhKYg.PNG%2F59ccc742-7f69-419c-be73-6ae187003cee.png&type=sc960_832' },
+  { key: 'pizza', text: '피자', image: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNTEyMjNfMTA1%2FMDAxNzY2NDUzMzgwNjc5.ZFKiuifaEsQwym30j1eDDogjE6nVZwRIAf0cK4WYDmgg.OrtlflxIcsF0PvHEBhsknbYIdSXo6jFBTuhct-w-hCMg.JPEG%2F6.jpg&type=sc960_832' },
+  { key: 'cafe_dessert', text: '카페/디저트', image: 'https://media.istockphoto.com/id/1428594094/ko/%EC%82%AC%EC%A7%84/%EB%82%98%EB%AC%B4-%ED%85%8C%EC%9D%B4%EB%B8%94-%EC%BB%A4%ED%94%BC-%EB%A9%94%EC%9D%B4%EC%BB%A4-%ED%8C%A8%EC%8A%A4%ED%8A%B8%EB%A6%AC-%EB%B0%8F-%ED%8E%9C%EB%8D%98%ED%8A%B8-%EC%A1%B0%EB%AA%85%EC%9D%B4%EC%9E%88%EB%8A%94-%EB%B9%88-%EC%BB%A4%ED%94%BC-%EC%88%8D-%EC%9D%B8%ED%85%8C%EB%A6%AC%EC%96%B4.jpg?s=612x612&w=0&k=20&c=5bHJXVEZ4D9zsN_ZV-XVZsTxwxL5GdUOo5D0PPs3fsI=' },
+  { key: 'late_night', text: '야식', image: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyNDEyMDVfMjY1%2FMDAxNzMzMzk4NzgyODgz.fF7oxEhObmJzNYm1RvpQYKy7KpG0rPQCjcqcIi3LoBkg.gB8EEOi6paSAFtRPhcEcv2MA5L_bmcJGrqzfRmh035gg.PNG%2Fimage.png&type=sc960_832' },
+  { key: 'etc', text: '기타', image: 'https://search.pstatic.net/sunny/?src=https%3A%2F%2Fimage.msscdn.net%2Fmfile_s01%2F2023%2F01%2F29%2Ff698ec438a71ad5c0e405170a90f29d6021950.jpg&type=sc960_832' }
 ];
 
 

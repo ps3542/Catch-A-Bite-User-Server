@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { HiStar, HiOutlineClock, HiHeart, HiOutlineHeart, HiExclamationCircle } from "react-icons/hi";
-import KakaoAddressMap from '../../components/KakaoAddressMap';
+import KakaoAddressMap from "../../components/owner/KakaoAddressMap"
 
 // Swiper 컴포넌트 및 필수 스타일
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -17,6 +17,15 @@ import { appUserReviewService } from "../../api/appuser/ReviewService";
 import "./UserStorePage.css";
 import MenuCard from "../../components/appuser/MenuCard";
 import Modal from "../../components/common/Modal"; 
+
+const formatTime = (timeInt) => {
+  if (timeInt === null || timeInt === undefined) return "정보없음";
+  // 문자열로 변환 후 앞에 0을 채워 4자리로 만듦 (예: 900 -> "0900")
+  const str = String(timeInt).padStart(4, '0');
+  const hours = str.substring(0, 2);
+  const minutes = str.substring(2, 4);
+  return `${hours}:${minutes}`;
+};
 
 export default function UserStorePage() {
   const { storeId } = useParams();
@@ -46,6 +55,7 @@ export default function UserStorePage() {
     try {
       setLoading(true);
       const data = await appUserStoreService.getStoreDetails(storeId);
+      console.log(data);
       setStore(data);
       setFavoriteId(data.favoriteId);
       
@@ -183,7 +193,20 @@ export default function UserStorePage() {
              {store.estimatedDeliveryTime || "30-45분"}
           </div>
         </div>
-
+        <div className="details-operating-time" style={{ 
+            marginTop: '8px', 
+            fontSize: '0.9rem', 
+            color: '#666', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            gap: '6px' 
+        }}>
+            <span style={{ fontWeight: '600', color: '#333' }}>영업시간</span>
+            <span>
+              {formatTime(store.storeOpenTime)} ~ {formatTime(store.storeCloseTime)}
+            </span>
+        </div>
         <p className="details-intro-text">{store.storeIntro}</p>
         
         {store.storeOriginLabel && (

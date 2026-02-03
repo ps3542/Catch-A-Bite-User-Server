@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { ownerStoreService } from "../../api/owner/ownerStoreService";
 import styles from "../../styles/owner.module.css";
@@ -26,13 +26,31 @@ const notifyActiveStoreIdChanged = (storeId) => {
   }
 };
 
+// 현재 pathname에서 /owner/stores/:id 부분이 있으면 id만 교체
+// 없으면 기본 랜딩(/owner/stores/:id/edit)으로 보냄
+const OWNER_STORES_PREFIX = "/owner/stores";
+
+const buildNextPath = (pathname, nextStoreId) => {
+  const re = new RegExp(`^(${OWNER_STORES_PREFIX}/)(\\d+)(/.*)?$`);
+  const m = String(pathname ?? "").match(re);
+
+  if (m) {
+    const suffix = m[3] ?? "";
+    return `${m[1]}${nextStoreId}${suffix}`;
+  }
+
+  // 현재 경로가 storeId를 포함하지 않는 경우(예: /owner/stores 목록 등)
+  return `${OWNER_STORES_PREFIX}/${nextStoreId}/edit`;
+};
+
 /**
  * 현재 매장 컨텍스트 바
- * - 기존: storeId 수동 입력(사용성이 낮아 화면에서 아무 것도 못하는 상황이 자주 발생)
- * - 개선: 내 매장 목록을 불러와 드롭다운으로 선택 + storeId 자동 세팅
+ * - 내 매장 목록을 불러와 드롭다운으로 선택 + storeId 자동 세팅
+ * - 적용 시: active store 저장 + 이벤트 발행 + (가능하면) 현재 화면을 같은 기능 화면으로 storeId만 교체하여 이동
  */
 export default function OwnerStoreContextBar({ fixedStoreId, onChange }) {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const initial = useMemo(() => {
     if (fixedStoreId) return Number(fixedStoreId);
@@ -74,6 +92,9 @@ export default function OwnerStoreContextBar({ fixedStoreId, onChange }) {
             setStoreId(next);
             notifyActiveStoreIdChanged(next);
             onChange?.(next);
+            // 자동 적용 시에도 현재 화면을 storeId 기준 화면으로 맞춰주고 싶으면 아래 주석 해제
+            // const nextPath = buildNextPath(location.pathname, next);
+            // navigate(`${nextPath}${location.search}`, { replace: true });
           }
         }
       } catch (e) {
@@ -96,15 +117,24 @@ export default function OwnerStoreContextBar({ fixedStoreId, onChange }) {
     return () => {
       active = false;
     };
+    // location/navigate는 자동적용 navigate 주석 해제 시 deps에 넣는 게 맞습니다.
   }, [fixedStoreId, onChange]);
 
   const handleApply = (nextId) => {
     const next = Number(nextId);
     if (!Number.isFinite(next) || next <= 0) return;
+
+    // 상태/스토리지/이벤트
     saveActiveStoreId(next);
     setStoreId(next);
     notifyActiveStoreIdChanged(next);
     onChange?.(next);
+
+    // ✅ 여기서 “바로 화면 이동” 처리
+    if (!fixedStoreId) {
+      const nextPath = buildNextPath(location.pathname, next);
+      navigate(`${nextPath}${location.search}`, { replace: true });
+    }
   };
 
   const selectedId = Number(storeId);
@@ -155,9 +185,7 @@ export default function OwnerStoreContextBar({ fixedStoreId, onChange }) {
           </>
         )}
 
-        <div className={styles.storeContextHint}>
-
-        </div>
+        <div className={styles.storeContextHint}></div>
 
         {errorText ? (
           <div className={styles.storeContextError}>{errorText}</div>
