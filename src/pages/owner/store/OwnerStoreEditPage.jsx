@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import InlineMessage from "../../../components/InlineMessage.jsx";
 import { ownerStoreService } from "../../../api/owner/ownerStoreService.js";
 import { ownerStoreImageService } from "../../../api/owner/ownerStoreImageService.js";
-import KakaoAddressMap from "../../../components/KakaoAddressMap.jsx";
 import styles from "../../../styles/ownerStoreEdit.module.css";
 import KakaoAddressMap from "../../../components/owner/KaKaoAddressMap.jsx";
 import AddressSearchModal from "../../../components/owner/AddressSearchModal.jsx";
