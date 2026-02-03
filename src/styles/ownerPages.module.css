@@ -84,6 +84,23 @@
   font-weight: 700;
 }
 
+.switchRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* ← 왼쪽 / 오른쪽 갈라주는 핵심 */
+}
+
+.switchLeft {
+  display: flex;
+  gap: 8px;
+}
+
+.switchRight {
+  display: flex;
+  gap: 8px;
+}
+
+
 .switchOn {
   background: #111;
   color: #fff;

@@ -111,6 +111,16 @@ export const authService = {
     });
   },
 
+    logout: async () => {
+    return request({
+      label: "Auth Logout",
+      method: "POST",
+      url: "/api/v1/auth/logout",
+      data: null,
+    });
+  },
+
+
   // ==========================================================
   // 2. User signup (POST)
   // ==========================================================

@@ -191,29 +191,146 @@ export default function OwnerMainPage() {
         </div>
       </div>
 
-      <div className={styles.cardGrid}>
-        <div className={styles.card}>
-          <div className={styles.cardTitle}>영업 상태</div>
 
-          <div className={styles.switchRow}>
+<div className={styles.cardGrid}>
+  {/* 1) 왼쪽 카드: 기존 영업 상태 */}
+  <div className={styles.card}>
+    <div className={styles.cardTitle}>영업 상태</div>
+
+    <div className={styles.switchRow}>
+      <button
+        type="button"
+        className={`${styles.switchBtn} ${isOpen ? styles.switchOn : ""}`}
+        onClick={applyOpen}
+        disabled={loadingStatus}
+      >
+        영업중
+      </button>
+
+      <button
+        type="button"
+        className={`${styles.switchBtn} ${!isOpen ? styles.switchOn : ""}`}
+        onClick={openPausePicker}
+        disabled={loadingStatus}
+      >
+        일시정지
+      </button>
+    </div>
+
+    {showPausePicker ? (
+      <div className={styles.modalOverlay} role="dialog" aria-modal="true">
+        <div className={styles.modal}>
+          <div className={styles.modalTop}>
+            <div className={styles.modalTitle}>일시정지 시간을 선택해 주세요</div>
             <button
               type="button"
-              className={`${styles.switchBtn} ${isOpen ? styles.switchOn : ""}`}
-              onClick={applyOpen}
+              className={styles.modalClose}
+              onClick={() => setShowPausePicker(false)}
+              aria-label="닫기"
               disabled={loadingStatus}
             >
-              영업중
-            </button>
-
-            <button
-              type="button"
-              className={`${styles.switchBtn} ${!isOpen ? styles.switchOn : ""}`}
-              onClick={openPausePicker}
-              disabled={loadingStatus}
-            >
-              일시정지
+              ✕
             </button>
           </div>
+
+          <div className={styles.optionGrid}>
+            {PAUSE_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                className={`${styles.optionBtn} ${pauseMin === opt.value ? styles.optionBtnActive : ""}`}
+                onClick={() => setPauseMin(opt.value)}
+                disabled={loadingStatus}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+
+          <div className={styles.modalActions}>
+            <button
+              type="button"
+              className={styles.outlineBtn}
+              onClick={() => setShowPausePicker(false)}
+              disabled={loadingStatus}
+            >
+              취소
+            </button>
+            <button
+              type="button"
+              className={styles.primaryBtn}
+              onClick={applyPause}
+              disabled={loadingStatus}
+            >
+              적용
+            </button>
+          </div>
+        </div>
+      </div>
+    ) : null}
+
+    <div className={styles.cardHint}>
+      {!hasStore ? "매장을 선택/등록해 주세요." : null}
+      {hasStore && pauseRemainText ? `일시정지 종료까지 ${pauseRemainText} 남음` : null}
+    </div>
+  </div>
+
+  {/* 2) 오른쪽 카드: 영업 시작/종료 */}
+  <div className={styles.card}>
+    <div className={styles.cardTitle}>가게 운영</div>
+
+    <div className={styles.switchRow}>
+      <button
+        type="button"
+        className={`${styles.switchBtn} ${isOpen ? styles.switchOn : ""}`}
+        disabled={loadingStatus}
+        onClick={async () => {
+          if (!hasStore) {
+            navigate("/owner/stores");
+            return;
+          }
+          setLoadingStatus(true);
+          try {
+            await ownerStoreService.changeStatus(storeId, { storeOpenStatus: "open" });
+            clearPauseUntil();
+            setPauseRemainText("");
+            setShowPausePicker(false);
+            setIsOpen(true);
+          } finally {
+            setLoadingStatus(false);
+          }
+        }}
+      >
+        영업시작
+      </button>
+
+      <button
+        type="button"
+        className={`${styles.switchBtn} ${!isOpen ? styles.switchOn : ""}`}
+        disabled={loadingStatus}
+        onClick={async () => {
+          if (!hasStore) {
+            navigate("/owner/stores");
+            return;
+          }
+          setLoadingStatus(true);
+          try {
+            await ownerStoreService.changeStatus(storeId, { storeOpenStatus: "close" });
+            setIsOpen(false);
+          } finally {
+            setLoadingStatus(false);
+          }
+        }}
+      >
+        영업종료
+      </button>
+    </div>
+
+   
+
+
+
+
 
           {showPausePicker ? (
             <div className={styles.modalOverlay} role="dialog" aria-modal="true">

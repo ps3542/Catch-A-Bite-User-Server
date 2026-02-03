@@ -1,4 +1,6 @@
 // src/layout/owner/OwnerHeader.jsx
+import { useNavigate } from "react-router-dom";
+import { authService } from "../../services/authService"; // 경로 확인: layout/owner 기준
 import styles from "./ownerLayout.module.css";
 
 const titleByPath = (pathname) => {
@@ -15,12 +17,29 @@ const titleByPath = (pathname) => {
 
 const OwnerHeader = ({ pathname }) => {
   const title = titleByPath(pathname);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await authService.logout(); // ✅ 세션 끊기
+    } catch (e) {
+      // 로그아웃 실패해도 화면 이동은 하도록 처리(UX)
+    } finally {
+      // ✅ 로컬스토리지 정리(선택매장/일시정지 등)
+      try {
+        window.localStorage.removeItem("owner_active_store_id");
+      } catch {}
+
+      // ✅ 로그인 페이지로
+      navigate("/owner/login", { replace: true });
+    }
+  };
 
   return (
     <header className={styles.header}>
       <div className={styles.headerTitle}>{title}</div>
       <div className={styles.headerRight}>
-        <button type="button" className={styles.logoutBtn}>
+        <button type="button" className={styles.logoutBtn} onClick={handleLogout}>
           로그아웃
         </button>
       </div>

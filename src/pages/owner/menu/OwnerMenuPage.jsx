@@ -121,25 +121,7 @@ export default function OwnerMenuPage() {
                     {isAvailable ? "품절" : "판매중"}
                   </button>
 
-                  {/* 백엔드 스펙에 '숨김' 개념이 없음: 디자인 유지 + 비활성 */}
-                  <button
-                    type="button"
-                    className={`${styles.actionBtn} ${styles.disabledBtn}`}
-                    disabled
-                    title="현재 사용할 수 없습니다."
-                  >
-                    숨김
-                  </button>
 
-                  {/* 백엔드 스펙에 '노출기간' 개념이 없음: 디자인 유지 + 비활성 */}
-                  <button
-                    type="button"
-                    className={`${styles.actionBtn} ${styles.disabledBtn}`}
-                    disabled
-                    title="현재 사용할 수 없습니다."
-                  >
-                    노출기간
-                  </button>
 
                   <button
                     type="button"

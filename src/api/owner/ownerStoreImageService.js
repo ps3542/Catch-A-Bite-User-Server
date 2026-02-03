@@ -8,6 +8,9 @@ export const ownerStoreImageService = {
   // 백엔드는 multipart가 아니라 url 저장 방식(StoreImageDTO)
   create: async (storeId, payload) => axiosInstance.post(`${base}/${storeId}/images`, payload),
 
+  remove: async (storeId, storeImageId) =>
+    axiosInstance.delete(`${base}/${storeId}/images/${storeImageId}`),
+
   delete: async (storeId, storeImageId) =>
     axiosInstance.delete(`${base}/${storeId}/images/${storeImageId}`),
 };

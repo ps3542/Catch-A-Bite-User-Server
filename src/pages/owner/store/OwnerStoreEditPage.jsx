@@ -5,6 +5,23 @@ import { ownerStoreService } from "../../../api/owner/ownerStoreService.js";
 import { ownerStoreImageService } from "../../../api/owner/ownerStoreImageService.js";
 import KakaoAddressMap from "../../../components/KakaoAddressMap.jsx";
 import styles from "../../../styles/ownerStoreEdit.module.css";
+import KakaoAddressMap from "../../../components/owner/KaKaoAddressMap.jsx";
+import AddressSearchModal from "../../../components/owner/AddressSearchModal.jsx";
+
+// "0900" -> "오전 09시 00분"
+const hhmmToKoreanTime = (v) => {
+  if (v == null) return "";
+
+  const hh = Math.floor(v / 100);
+  const mm = v % 100;
+
+  const isAm = hh < 12;
+  const displayHour = hh % 12 === 0 ? 12 : hh % 12;
+
+  const period = isAm ? "오전" : "오후";
+
+  return `${period} ${String(displayHour).padStart(2, "0")}시 ${String(mm).padStart(2, "0")}분`;
+};
 
 const pickData = (res) => res?.data?.data ?? res?.data ?? null;
 
@@ -63,6 +80,9 @@ export default function OwnerStoreEditPage() {
 
   const [businessInfo, setBusinessInfo] = useState(null);
   const [originLabel, setOriginLabel] = useState("");
+
+  // ✅ 주소 검색 모달 (훅은 반드시 컴포넌트 안)
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
 
   // 섹션별 편집 상태
   const [editing, setEditing] = useState({
@@ -191,7 +211,11 @@ export default function OwnerStoreEditPage() {
   const saveHours = async () => {
     // 운영시간은 PATCH DTO에 없어서, PUT(StoreDTO)로 반영합니다.
     setStatus(null);
+
     try {
+      const open = textToHhmm(draft.openTime);
+      const close = textToHhmm(draft.closeTime);
+
       const payload = {
         storeId: sid,
         storeName: store.storeName,
@@ -201,54 +225,66 @@ export default function OwnerStoreEditPage() {
         storeMinOrder: store.storeMinOrder,
         storeMaxDist: store.storeMaxDist,
         storeDeliveryFee: store.storeDeliveryFee,
-        storeOpenTime: textToHhmm(draft.openTime),
-        storeCloseTime: textToHhmm(draft.closeTime),
+        storeOpenTime: open,
+        storeCloseTime: close,
         storeOpenStatus: store.storeOpenStatus,
         storeIntro: store.storeIntro,
       };
 
-      const res = await ownerStoreService.update(sid, payload);
-      const next = pickData(res);
-      setStore(next);
+      // ✅ 서버 저장
+      await ownerStoreService.update(sid, payload);
+
+      // ✅ 화면은 내가 저장한 값으로 즉시 갱신 (서버 응답이 운영시간을 안 내려줘도 UI가 바뀜)
+      setStore((prev) => ({
+        ...prev,
+        storeOpenTime: open,
+        storeCloseTime: close,
+      }));
+
+      // ✅ 편집 모드 닫기
       setEditing((p) => ({ ...p, hours: false }));
+
       setStatus({ tone: "success", message: "운영시간이 저장되었습니다." });
     } catch (e) {
-      setStatus({ tone: "error", message: e?.response?.data?.message || "운영시간 저장에 실패했습니다." });
+      setStatus({
+        tone: "error",
+        message: e?.response?.data?.message || "운영시간 저장에 실패했습니다.",
+      });
     }
   };
 
-const saveBusinessInfo = async () => {
-  setStatus(null);
-  try {
-    const payload = {
-      ownerName: draft.ownerName || null,
-      businessName: draft.businessName || null,
-      businessAddress: draft.businessAddress || null,
-      businessRegistrationNo: draft.businessRegistrationNo || null,
-    };
-    const res = await ownerStoreService.patchBusinessInfo(sid, payload);
-    const next = pickData(res);
-    setBusinessInfo(next);
-    setEditing((p) => ({ ...p, business: false }));
-    setStatus({ tone: "success", message: "사업자 정보가 저장되었습니다." });
-  } catch (e) {
-    setStatus({ tone: "error", message: e?.response?.data?.message || "저장에 실패했습니다." });
-  }
-};
+  const saveBusinessInfo = async () => {
+    setStatus(null);
+    try {
+      const payload = {
+        ownerName: draft.ownerName || null,
+        businessName: draft.businessName || null,
+        businessAddress: draft.businessAddress || null,
+        businessRegistrationNo: draft.businessRegistrationNo || null,
+      };
+      const res = await ownerStoreService.patchBusinessInfo(sid, payload);
+      const next = pickData(res);
+      setBusinessInfo(next);
+      setEditing((p) => ({ ...p, business: false }));
+      setStatus({ tone: "success", message: "사업자 정보가 저장되었습니다." });
+    } catch (e) {
+      setStatus({ tone: "error", message: e?.response?.data?.message || "저장에 실패했습니다." });
+    }
+  };
 
-const saveOriginLabel = async () => {
-  setStatus(null);
-  try {
-    const payload = { originLabel: draft.originLabel ?? "" };
-    const res = await ownerStoreService.patchOriginLabel(sid, payload);
-    const next = pickData(res);
-    setOriginLabel(next?.originLabel ?? "");
-    setEditing((p) => ({ ...p, origin: false }));
-    setStatus({ tone: "success", message: "원산지 표기가 저장되었습니다." });
-  } catch (e) {
-    setStatus({ tone: "error", message: e?.response?.data?.message || "저장에 실패했습니다." });
-  }
-};
+  const saveOriginLabel = async () => {
+    setStatus(null);
+    try {
+      const payload = { originLabel: draft.originLabel ?? "" };
+      const res = await ownerStoreService.patchOriginLabel(sid, payload);
+      const next = pickData(res);
+      setOriginLabel(next?.originLabel ?? "");
+      setEditing((p) => ({ ...p, origin: false }));
+      setStatus({ tone: "success", message: "원산지 표기가 저장되었습니다." });
+    } catch (e) {
+      setStatus({ tone: "error", message: e?.response?.data?.message || "저장에 실패했습니다." });
+    }
+  };
 
   const toggleOpenStatus = async () => {
     setStatus(null);
@@ -344,7 +380,7 @@ const saveOriginLabel = async () => {
             {!editing.hours ? (
               <div className={styles.readValue}>
                 {store.storeOpenTime != null && store.storeCloseTime != null
-                  ? `${hhmmToText(store.storeOpenTime)} ~ ${hhmmToText(store.storeCloseTime)}`
+                  ? `${hhmmToKoreanTime(store.storeOpenTime)} ~ ${hhmmToKoreanTime(store.storeCloseTime)}`
                   : "운영 시간을 설정해 주세요."}
               </div>
             ) : (
@@ -379,9 +415,7 @@ const saveOriginLabel = async () => {
                   </button>
                 </div>
 
-                <div className={styles.hint}>
-                 
-                </div>
+                <div className={styles.hint}></div>
               </div>
             )}
           </SectionCard>
@@ -402,17 +436,31 @@ const saveOriginLabel = async () => {
             ) : (
               <div className={styles.formRow}>
                 <div className={styles.label}>주소</div>
-                <input
-                  className={styles.input}
-                  value={draft.storeAddress}
-                  onChange={(e) => setDraft((p) => ({ ...p, storeAddress: e.target.value }))}
-                  placeholder="주소를 입력해 주세요"
-                />
+
+                {/* ✅ 직접 입력 대신: readonly + 주소 검색 버튼 */}
+                <div style={{ display: "flex", gap: 8, width: "100%" }}>
+                  <input
+                    className={styles.input}
+                    value={draft.storeAddress || ""}
+                    readOnly
+                    placeholder="주소 검색을 눌러 선택해 주세요"
+                  />
+                  <button
+                    type="button"
+                    className={styles.outlineBtn}
+                    onClick={() => setIsAddressModalOpen(true)}
+                    style={{ whiteSpace: "nowrap" }}
+                  >
+                    주소 검색
+                  </button>
+                </div>
+
                 <div className={styles.actionRow}>
                   <button
                     type="button"
                     className={styles.primaryBtn}
                     onClick={() => savePatch({ storeAddress: draft.storeAddress }, "address")}
+                    disabled={!draft.storeAddress?.trim()}
                   >
                     저장
                   </button>
@@ -428,6 +476,14 @@ const saveOriginLabel = async () => {
                     key={`draft-${sid}-${draft.storeAddress || ""}`}
                   />
                 </div>
+
+                {/* ✅ 모달 */}
+                <AddressSearchModal
+                  isOpen={isAddressModalOpen}
+                  onClose={() => setIsAddressModalOpen(false)}
+                  initialAddress={draft.storeAddress || ""}
+                  onConfirm={(addr) => setDraft((p) => ({ ...p, storeAddress: addr }))}
+                />
               </div>
             )}
           </SectionCard>
@@ -476,87 +532,85 @@ const saveOriginLabel = async () => {
                   <button type="button" className={styles.outlineBtn} onClick={openImageModal}>
                     이미지 URL 추가
                   </button>
-                  <span className={styles.hint}>
-                    백엔드는 파일 업로드가 아니라 URL 저장(StoreImageDTO) 방식입니다.
-                  </span>
+                  <span className={styles.hint}>백엔드는 파일 업로드가 아니라 URL 저장(StoreImageDTO) 방식입니다.</span>
                 </div>
               </div>
             </div>
           </SectionCard>
 
-<SectionCard
-  title="사업자 정보"
-  subtitle="대표자명 / 상호명 / 사업자주소 / 사업자등록번호"
-  editing={editing.business}
-  onEdit={() => toggleEdit("business")}
->
-  {!editing.business ? (
-    <>
-      <div className={styles.bizGrid}>
-        <div className={styles.bizKey}>대표자명</div>
-        <div className={styles.bizVal}>{businessInfo?.ownerName ?? "-"}</div>
+          <SectionCard
+            title="사업자 정보"
+            subtitle="대표자명 / 상호명 / 사업자주소 / 사업자등록번호"
+            editing={editing.business}
+            onEdit={() => toggleEdit("business")}
+          >
+            {!editing.business ? (
+              <>
+                <div className={styles.bizGrid}>
+                  <div className={styles.bizKey}>대표자명</div>
+                  <div className={styles.bizVal}>{businessInfo?.ownerName ?? "-"}</div>
 
-        <div className={styles.bizKey}>상호명</div>
-        <div className={styles.bizVal}>{businessInfo?.businessName ?? "-"}</div>
+                  <div className={styles.bizKey}>상호명</div>
+                  <div className={styles.bizVal}>{businessInfo?.businessName ?? "-"}</div>
 
-        <div className={styles.bizKey}>사업자주소</div>
-        <div className={styles.bizVal}>{businessInfo?.businessAddress ?? "-"}</div>
+                  <div className={styles.bizKey}>사업자주소</div>
+                  <div className={styles.bizVal}>{businessInfo?.businessAddress ?? "-"}</div>
 
-        <div className={styles.bizKey}>사업자등록번호</div>
-        <div className={styles.bizVal}>{businessInfo?.businessRegistrationNo ?? "-"}</div>
-      </div>
-      <div className={styles.hint}></div>
-    </>
-  ) : (
-    <div className={styles.formRow}>
-      <div>
-        <div className={styles.label}>대표자명</div>
-        <input
-          className={styles.input}
-          value={draft.ownerName}
-          onChange={(e) => setDraft((p) => ({ ...p, ownerName: e.target.value }))}
-          placeholder="대표자명을 입력하세요"
-        />
-      </div>
-      <div>
-        <div className={styles.label}>상호명</div>
-        <input
-          className={styles.input}
-          value={draft.businessName}
-          onChange={(e) => setDraft((p) => ({ ...p, businessName: e.target.value }))}
-          placeholder="상호명을 입력하세요"
-        />
-      </div>
-      <div>
-        <div className={styles.label}>사업자주소</div>
-        <input
-          className={styles.input}
-          value={draft.businessAddress}
-          onChange={(e) => setDraft((p) => ({ ...p, businessAddress: e.target.value }))}
-          placeholder="사업자주소를 입력하세요"
-        />
-      </div>
-      <div>
-        <div className={styles.label}>사업자등록번호</div>
-        <input
-          className={styles.input}
-          value={draft.businessRegistrationNo}
-          onChange={(e) => setDraft((p) => ({ ...p, businessRegistrationNo: e.target.value }))}
-          placeholder="사업자등록번호를 입력하세요"
-        />
-      </div>
+                  <div className={styles.bizKey}>사업자등록번호</div>
+                  <div className={styles.bizVal}>{businessInfo?.businessRegistrationNo ?? "-"}</div>
+                </div>
+                <div className={styles.hint}></div>
+              </>
+            ) : (
+              <div className={styles.formRow}>
+                <div>
+                  <div className={styles.label}>대표자명</div>
+                  <input
+                    className={styles.input}
+                    value={draft.ownerName}
+                    onChange={(e) => setDraft((p) => ({ ...p, ownerName: e.target.value }))}
+                    placeholder="대표자명을 입력하세요"
+                  />
+                </div>
+                <div>
+                  <div className={styles.label}>상호명</div>
+                  <input
+                    className={styles.input}
+                    value={draft.businessName}
+                    onChange={(e) => setDraft((p) => ({ ...p, businessName: e.target.value }))}
+                    placeholder="상호명을 입력하세요"
+                  />
+                </div>
+                <div>
+                  <div className={styles.label}>사업자주소</div>
+                  <input
+                    className={styles.input}
+                    value={draft.businessAddress}
+                    onChange={(e) => setDraft((p) => ({ ...p, businessAddress: e.target.value }))}
+                    placeholder="사업자주소를 입력하세요"
+                  />
+                </div>
+                <div>
+                  <div className={styles.label}>사업자등록번호</div>
+                  <input
+                    className={styles.input}
+                    value={draft.businessRegistrationNo}
+                    onChange={(e) => setDraft((p) => ({ ...p, businessRegistrationNo: e.target.value }))}
+                    placeholder="사업자등록번호를 입력하세요"
+                  />
+                </div>
 
-      <div className={styles.actionRow}>
-        <button type="button" className={styles.primaryBtn} onClick={saveBusinessInfo}>
-          저장
-        </button>
-        <button type="button" className={styles.outlineBtn} onClick={() => toggleEdit("business")}>
-          취소
-        </button>
-      </div>
-    </div>
-  )}
-</SectionCard>
+                <div className={styles.actionRow}>
+                  <button type="button" className={styles.primaryBtn} onClick={saveBusinessInfo}>
+                    저장
+                  </button>
+                  <button type="button" className={styles.outlineBtn} onClick={() => toggleEdit("business")}>
+                    취소
+                  </button>
+                </div>
+              </div>
+            )}
+          </SectionCard>
 
           {/* 배달 조건 (피그마에 직접 없더라도, 백엔드 기능이므로 가게관리 하단 카드로 포함) */}
           <SectionCard
@@ -624,42 +678,35 @@ const saveOriginLabel = async () => {
             )}
           </SectionCard>
 
-<SectionCard
-  title="원산지 표기"
-  editing={editing.origin}
-  onEdit={() => toggleEdit("origin")}
->
-  {!editing.origin ? (
-    <>
-      <div className={styles.readValue}>
-        {originLabel ? originLabel : "등록된 원산지 표기가 없습니다."}
-      </div>
-      <div className={styles.hint}></div>
-    </>
-  ) : (
-    <div className={styles.formRow}>
-      <div>
-        <div className={styles.label}></div>
-        <textarea
-          className={styles.textarea}
-          value={draft.originLabel}
-          onChange={(e) => setDraft((p) => ({ ...p, originLabel: e.target.value }))}
-          placeholder="최대 4000자까지 입력 가능합니다."
-        />
-      </div>
+          <SectionCard title="원산지 표기" editing={editing.origin} onEdit={() => toggleEdit("origin")}>
+            {!editing.origin ? (
+              <>
+                <div className={styles.readValue}>{originLabel ? originLabel : "등록된 원산지 표기가 없습니다."}</div>
+                <div className={styles.hint}></div>
+              </>
+            ) : (
+              <div className={styles.formRow}>
+                <div>
+                  <div className={styles.label}></div>
+                  <textarea
+                    className={styles.textarea}
+                    value={draft.originLabel}
+                    onChange={(e) => setDraft((p) => ({ ...p, originLabel: e.target.value }))}
+                    placeholder="최대 4000자까지 입력 가능합니다."
+                  />
+                </div>
 
-      <div className={styles.actionRow}>
-        <button type="button" className={styles.primaryBtn} onClick={saveOriginLabel}>
-          저장
-        </button>
-        <button type="button" className={styles.outlineBtn} onClick={() => toggleEdit("origin")}>
-          취소
-        </button>
-      </div>
-    </div>
-  )}
-</SectionCard>
-
+                <div className={styles.actionRow}>
+                  <button type="button" className={styles.primaryBtn} onClick={saveOriginLabel}>
+                    저장
+                  </button>
+                  <button type="button" className={styles.outlineBtn} onClick={() => toggleEdit("origin")}>
+                    취소
+                  </button>
+                </div>
+              </div>
+            )}
+          </SectionCard>
         </div>
       ) : null}
 

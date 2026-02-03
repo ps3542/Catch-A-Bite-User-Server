@@ -59,7 +59,7 @@ export default function OwnerStoreImagePage() {
                 type="button"
                 className={styles.dangerBtn}
                 onClick={async () => {
-                  await ownerStoreImageService.remove(sid, img.storeImageId ?? img.id);
+                  await ownerStoreImageService.delete(sid, img.storeImageId ?? img.id);
                   load();
                 }}
               >
