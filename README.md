@@ -71,11 +71,11 @@ src/
 
 ## 팀원 (Team)
 
-- [**김정호](https://junghokim1031.github.io/portfolio/):** PM, 서기, GitHub, 및 사용자 관련 프론트엔드
-- [**박성철](https://ps3542.github.io/portfolio/):** PL 및 가맹주점 관련 프론트엔드
-- [**이주희](https://juhee121.github.io/portfolio/):** 사용자 메인페이지, 검색 및 마이페이지
-- [**이주호](https://jhlee002.github.io/portfolio/):** Rider 관련 프론트엔드
-- [**김진덕](https://cave8026.github.io/portfolio/):** 인증(Auth), 회원가입, 및 로그인
+- **[김정호](https://junghokim1031.github.io/portfolio/):** PM, 서기, GitHub, 및 사용자 관련 프론트엔드
+- **[박성철](https://ps3542.github.io/portfolio/):** PL 및 가맹주점 관련 프론트엔드
+- **[이주희](https://juhee121.github.io/portfolio/):** 사용자 메인페이지, 검색 및 마이페이지
+- **[이주호](https://jhlee002.github.io/portfolio/):** Rider 관련 프론트엔드
+- **[김진덕](https://cave8026.github.io/portfolio/):** 인증(Auth), 회원가입, 및 로그인
 
 ## 설치 및 실행 방법
 
